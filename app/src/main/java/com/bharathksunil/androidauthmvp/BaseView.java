@@ -1,4 +1,4 @@
-package com.bharathksunil.firebaseauthmvp;
+package com.bharathksunil.androidauthmvp;
 
 /**
  * This is the common view operations

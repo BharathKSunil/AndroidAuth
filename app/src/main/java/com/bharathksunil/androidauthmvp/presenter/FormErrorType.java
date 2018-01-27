@@ -1,4 +1,4 @@
-package com.bharathksunil.firebaseauthmvp.presenter;
+package com.bharathksunil.androidauthmvp.presenter;
 
 /**
  * This enum accumulates the different types of errors possible on a form

@@ -1,4 +1,4 @@
-package com.bharathksunil.firebaseauthmvp.presenter;
+package com.bharathksunil.androidauthmvp.presenter;
 
 import org.junit.Assert;
 import org.junit.Test;

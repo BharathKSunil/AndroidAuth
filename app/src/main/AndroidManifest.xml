@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bharathksunil.firebaseauthmvp">
+    package="com.bharathksunil.androidauthmvp">
 
     <application
         android:allowBackup="true"

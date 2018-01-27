@@ -1,12 +1,14 @@
-package com.bharathksunil.firebaseauthmvp.presenter;
+package com.bharathksunil.androidauthmvp.presenter;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.bharathksunil.firebaseauthmvp.BaseView;
+import com.bharathksunil.androidauthmvp.BaseView;
 
 /**
  * This interface is to be used for signIn to the app by the view
  * the view must implement the
+ *
  * @author Bharath on 26-01-2018.
  */
 
@@ -19,24 +21,31 @@ public interface SignInPresenter {
     interface View extends BaseView {
         /**
          * This method is called by the presenter when it needs to email address
+         *
          * @return the emailId from the text field
          */
         String getEmailField();
+
         /**
          * This method is called when the presenter needs the password
+         *
          * @return the password as, entered by the user
          */
         String getPasswordField();
+
         /**
          * This method is called when there is an error on the EmailId Field passed
+         *
          * @param errorType the type of error indicating what kind of error was found in the field
          */
-        void onEmailError(FormErrorType errorType);
+        void onEmailError(@NonNull FormErrorType errorType);
+
         /**
          * This method is called when there is an error on the Password Field passed
+         *
          * @param errorType the type of error indicating what kind of error was found in the field
          */
-        void onPasswordError(FormErrorType errorType);
+        void onPasswordError(@NonNull FormErrorType errorType);
 
         /**
          * This method is called when the user was successfully signed in
@@ -48,6 +57,7 @@ public interface SignInPresenter {
      * Implement this repository to perform various signIn related operations on the repository(backend)
      * this abstracts the backend to the presenter and offers backend independence.
      * You may implement the backend in any fashion you like: REST, Firebase, SQLite etc..
+     *
      * @author Bharath on 26-01-2018.
      */
     interface Repository {
@@ -75,19 +85,26 @@ public interface SignInPresenter {
              * Called whenever there was an exception in processing the request
              */
             void onRepositoryException();
+
+            /**
+             * This is called when the user tries to sign in, but he is already signed in
+             */
+            void isAlreadySignedIn();
         }
 
         /**
          * This method sign in the user with the email and password
-         * @param email the email id of the user
+         *
+         * @param email    the email id of the user
          * @param password the password of the user
+         * @param signInCallbacks callbacks to the presenter
          */
-        void signInWithEmailAndPassword(String email, String password, SignInCallbacks signInCallbacks);
-
+        void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, final SignInCallbacks signInCallbacks);
     }
 
     /**
      * Call this method in the onResume to set the current view
+     *
      * @param view the SignInPresenter.View
      */
     void setView(@Nullable View view);

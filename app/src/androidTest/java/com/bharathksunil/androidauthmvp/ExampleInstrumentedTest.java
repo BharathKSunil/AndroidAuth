@@ -1,4 +1,4 @@
-package com.bharathksunil.firebaseauthmvp;
+package com.bharathksunil.androidauthmvp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

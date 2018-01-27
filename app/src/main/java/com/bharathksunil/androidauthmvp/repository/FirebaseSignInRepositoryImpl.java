@@ -1,9 +1,11 @@
-package com.bharathksunil.firebaseauthmvp.repository;
+package com.bharathksunil.androidauthmvp.repository;
 
-import com.bharathksunil.firebaseauthmvp.presenter.SignInPresenter;
+import android.support.annotation.NonNull;
+
+import com.bharathksunil.androidauthmvp.presenter.SignInPresenter;
 
 /**
- * This implements the
+ * This implements the SignInRepository and performs the sign with firebase as the backend
  * @author Bharath on 26-01-2018.
  */
 
@@ -16,7 +18,7 @@ public class FirebaseSignInRepositoryImpl implements SignInPresenter.Repository 
      * @param signInCallbacks callbacks to the presenter
      */
     @Override
-    public void signInWithEmailAndPassword(String email, String password, SignInCallbacks signInCallbacks) {
+    public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, final SignInCallbacks signInCallbacks) {
         //TODO: We shall write the firebase authentication and stuff here
     }
 }

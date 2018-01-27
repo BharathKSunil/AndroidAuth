@@ -1,4 +1,4 @@
-package com.bharathksunil.firebaseauthmvp.presenter;
+package com.bharathksunil.androidauthmvp.presenter;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
