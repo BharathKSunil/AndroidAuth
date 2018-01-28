@@ -51,6 +51,11 @@ public interface SignInPresenter {
          * This method is called when the user was successfully signed in
          */
         void onUserSignedIn();
+
+        /**
+         * This method is called when the user is already signed in and is trying to sign in again
+         */
+        void onUserAlreadySignedIn();
     }
 
     /**
@@ -95,11 +100,11 @@ public interface SignInPresenter {
         /**
          * This method sign in the user with the email and password
          *
-         * @param email    the email id of the user
-         * @param password the password of the user
+         * @param email           the email id of the user
+         * @param password        the password of the user
          * @param signInCallbacks callbacks to the presenter
          */
-        void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, final SignInCallbacks signInCallbacks);
+        void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull final SignInCallbacks signInCallbacks);
     }
 
     /**
@@ -113,18 +118,4 @@ public interface SignInPresenter {
      * Call this method to perform SignIn
      */
     void onSignInButtonClicked();
-
-    /**
-     * Call this method to perform a sign in with the email and password
-     * @param email the email Id of the user
-     * @param password the corresponding password credential
-
-    void signInViaEmailAndPassword(String email, String password);*/
-
-    /*
-    void sendPhoneVerificationCode(String phoneNo);
-    void resendPhoneVerificationCode();
-    void signInViaPhoneNumber(String phoneNo, String pin);
-
-    void signUpUser(String name, String dateOfBirth, String sex);*/
 }

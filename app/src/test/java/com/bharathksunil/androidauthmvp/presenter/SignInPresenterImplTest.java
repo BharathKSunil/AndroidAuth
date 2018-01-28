@@ -1,7 +1,11 @@
 package com.bharathksunil.androidauthmvp.presenter;
 
+import android.support.annotation.NonNull;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Random;
 
 /**
  * This runs some tests on the SignIn presenter. All the tests must pass.
@@ -10,13 +14,61 @@ import org.junit.Test;
  */
 public class SignInPresenterImplTest {
 
+    private final String CORRECT_EMAIL = "bharathk.sunil.k@gmail.com";
+    private final String CORRECT_PASSWORD = "12Bh@rath12";
+    private final String INCORRECT_EMAIL = "joey@gmail.com";
+    private final String INCORRECT_PASSWORD = "Joey@1234";
+
+    private String INVALID_EMAIL() {
+        String[] invalidEmails = new String[]{"plainaddress",
+                "#@%^%#$@#$@#.com",
+                "@example.com",
+                "Joe Smith <email@example.com>",
+                "email.example.com",
+                "email@example@example.com",
+                ".email@example.com",
+                "email.@example.com",
+                "email..email@example.com",
+                "あいうえお@example.com",
+                "email@example.com (Joe Smith)",
+                "email@example",
+                "email@-example.com",
+                "email@example.web",
+                "email@111.222.333.44444",
+                "email@example..com",
+                "Abc..123@example.com"
+        };
+        return invalidEmails[new Random().nextInt(invalidEmails.length)];
+    }
+
+    private String WEAK_PASSWORD() {
+        String[] invalidPasswords =
+                new String[]{
+                        "@",            //no Normal, Capital Characters & no Digit & Length < 8
+                        "1",            //no Normal, Special, Capital Characters & Length < 8
+                        "B",            //no Special Characters & no Digits & Length < 8
+                        "bh",           //no Special, Capital Characters & no Digit & Length < 8
+                        "bh@",          //no Capital Characters & no Digit & Length < 8
+                        "12bh@",        //no Capital Characters & Length < 8
+                        "12Bh",         //no Special Characters & Length < 8
+                        "12Bh@",        //Length < 8
+                        "12bharath12",  //no Special Character & Capital Character
+                        "12bh@rath12",  //no Capital Character
+                        "12Bharath12",  //no Special Characters
+                        "Bharath",      //no Digits & Special Characters & Length < 8
+                        "Bh@rath"       //no Digits & Length < 8
+                };
+        return invalidPasswords[new Random().nextInt(invalidPasswords.length)];
+    }
+
+
     //============================Presenter-View Tests======================================/
 
     /**
      * This test checks if the view will be notified if the login is successful
      */
     @Test
-    public void onSuccessfulSignInTest() {
+    public void successfullySignedInTest() {
 
         SignInPresenter.View view = new SignInPresenter.View() {
 
@@ -30,46 +82,48 @@ public class SignInPresenterImplTest {
 
             @Override
             public void onUnexpectedError() {
-                Assert.fail();
             }
 
             @Override
             public String getEmailField() {
-                return "bharathk.sunil.k@gmail.com";
+                return CORRECT_EMAIL;
             }
 
             @Override
             public String getPasswordField() {
-                return "24Bh@rath1996";
+                return CORRECT_PASSWORD;
             }
 
             @Override
-            public void onEmailError(FormErrorType errorType) {
-                Assert.fail();
+            public void onEmailError(@NonNull FormErrorType errorType) {
+
             }
 
             @Override
-            public void onPasswordError(FormErrorType errorType) {
-                Assert.fail();
+            public void onPasswordError(@NonNull FormErrorType errorType) {
+
             }
 
             @Override
             public void onUserSignedIn() {
                 Assert.assertEquals(true, true);
             }
+
+            @Override
+            public void onUserAlreadySignedIn() {
+
+            }
         };
 
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(String email, String password, SignInCallbacks signInCallbacks) {
-                //lets assume we reached to the repository and did the sign in and it was successful
-                signInCallbacks.onSignInSuccessful();
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+                signInLogic(email, password, signInCallbacks);
             }
         };
 
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
-
         signInPresenter.onSignInButtonClicked();
 
     }
@@ -78,7 +132,7 @@ public class SignInPresenterImplTest {
      * This test checks if the presenter will detect empty email field
      */
     @Test
-    public void onEmailEmptyTest() {
+    public void onEmptyEmailEnteredTest() {
 
         SignInPresenter.View view = new SignInPresenter.View() {
             @Override
@@ -91,7 +145,7 @@ public class SignInPresenterImplTest {
 
             @Override
             public void onUnexpectedError() {
-                Assert.fail();
+
             }
 
             @Override
@@ -101,41 +155,45 @@ public class SignInPresenterImplTest {
 
             @Override
             public String getPasswordField() {
-                return "24Bharath1996";
+                return CORRECT_PASSWORD;
             }
 
             @Override
-            public void onEmailError(FormErrorType errorType) {
+            public void onEmailError(@NonNull FormErrorType errorType) {
                 Assert.assertEquals(FormErrorType.EMPTY, errorType);
             }
 
             @Override
-            public void onPasswordError(FormErrorType errorType) {
-                Assert.fail();
+            public void onPasswordError(@NonNull FormErrorType errorType) {
+
             }
 
             @Override
             public void onUserSignedIn() {
-                Assert.fail();
+
+            }
+
+            @Override
+            public void onUserAlreadySignedIn() {
+
             }
         };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(String email, String password, SignInCallbacks signInCallbacks) {
-                //lets assume we reached to the repository and will do the sign here
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+                signInLogic(email, password, signInCallbacks);
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
         signInPresenter.onSignInButtonClicked();
-
     }
 
     /**
      * This test checks if the presenter will detect invalid email fields
      */
     @Test
-    public void onEmailInvalidTest() {
+    public void onInvalidEmailIdEnteredTest() {
 
         SignInPresenter.View view = new SignInPresenter.View() {
             @Override
@@ -148,38 +206,43 @@ public class SignInPresenterImplTest {
 
             @Override
             public void onUnexpectedError() {
-                Assert.fail();
+
             }
 
             @Override
             public String getEmailField() {
-                return "bhaarathk46@m";
+                return INVALID_EMAIL();
             }
 
             @Override
             public String getPasswordField() {
-                return "24Bharath1996";
+                return CORRECT_PASSWORD;
             }
 
             @Override
-            public void onEmailError(FormErrorType errorType) {
+            public void onEmailError(@NonNull FormErrorType errorType) {
                 Assert.assertEquals(FormErrorType.INVALID, errorType);
             }
 
             @Override
-            public void onPasswordError(FormErrorType errorType) {
-                Assert.fail();
+            public void onPasswordError(@NonNull FormErrorType errorType) {
+
             }
 
             @Override
             public void onUserSignedIn() {
-                Assert.fail();
+
+            }
+
+            @Override
+            public void onUserAlreadySignedIn() {
+
             }
         };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(String email, String password, SignInCallbacks signInCallbacks) {
-                //lets assume we reached to the repository and will do the sign here
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+                signInLogic(email, password, signInCallbacks);
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
@@ -191,7 +254,7 @@ public class SignInPresenterImplTest {
      * This test checks if the presenter will be able to detect empty password fields
      */
     @Test
-    public void onPasswordEmptyTest() {
+    public void onEmptyPasswordEnteredTest() {
 
         SignInPresenter.View view = new SignInPresenter.View() {
             @Override
@@ -204,12 +267,12 @@ public class SignInPresenterImplTest {
 
             @Override
             public void onUnexpectedError() {
-                Assert.fail();
+
             }
 
             @Override
             public String getEmailField() {
-                return "bharathk.sunil.k@gmail.com";
+                return CORRECT_EMAIL;
             }
 
             @Override
@@ -218,30 +281,34 @@ public class SignInPresenterImplTest {
             }
 
             @Override
-            public void onEmailError(FormErrorType errorType) {
-                Assert.fail();
+            public void onEmailError(@NonNull FormErrorType errorType) {
+
             }
 
             @Override
-            public void onPasswordError(FormErrorType errorType) {
+            public void onPasswordError(@NonNull FormErrorType errorType) {
                 Assert.assertEquals(FormErrorType.EMPTY, errorType);
             }
 
             @Override
             public void onUserSignedIn() {
-                Assert.fail();
+
+            }
+
+            @Override
+            public void onUserAlreadySignedIn() {
+
             }
         };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(String email, String password, SignInCallbacks signInCallbacks) {
-                //lets assume we reached to the repository and will do the sign here
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+                signInLogic(email, password, signInCallbacks);
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
         signInPresenter.onSignInButtonClicked();
-
     }
 
     /**
@@ -252,7 +319,7 @@ public class SignInPresenterImplTest {
      * C3: one Special Character
      */
     @Test
-    public void onPasswordInvalidTest() {
+    public void onInvalidOrWeakPasswordEnteredTest() {
 
         SignInPresenter.View view = new SignInPresenter.View() {
             @Override
@@ -265,38 +332,43 @@ public class SignInPresenterImplTest {
 
             @Override
             public void onUnexpectedError() {
-                Assert.fail();
+
             }
 
             @Override
             public String getEmailField() {
-                return "bharathk.sunil.k@gmail.com";
+                return CORRECT_EMAIL;
             }
 
             @Override
             public String getPasswordField() {
-                return "24Bharath1996";
+                return WEAK_PASSWORD();
             }
 
             @Override
-            public void onEmailError(FormErrorType errorType) {
-                Assert.fail();
+            public void onEmailError(@NonNull FormErrorType errorType) {
+
             }
 
             @Override
-            public void onPasswordError(FormErrorType errorType) {
+            public void onPasswordError(@NonNull FormErrorType errorType) {
                 Assert.assertEquals(FormErrorType.INVALID, errorType);
             }
 
             @Override
             public void onUserSignedIn() {
-                Assert.fail();
+
+            }
+
+            @Override
+            public void onUserAlreadySignedIn() {
+
             }
         };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(String email, String password, SignInCallbacks signInCallbacks) {
-                //lets assume we reached to the repository and will do the sign here
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+                signInLogic(email, password, signInCallbacks);
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
@@ -324,45 +396,48 @@ public class SignInPresenterImplTest {
 
             @Override
             public void onUnexpectedError() {
-                Assert.fail();
+
             }
 
             @Override
             public String getEmailField() {
-                return "bharathk.sunil.k@gmail.com";
+                return INCORRECT_EMAIL;
             }
 
             @Override
             public String getPasswordField() {
-                return "24Bh@rath1996";
+                return CORRECT_PASSWORD;
             }
 
             @Override
-            public void onEmailError(FormErrorType errorType) {
+            public void onEmailError(@NonNull FormErrorType errorType) {
                 Assert.assertEquals(FormErrorType.INCORRECT, errorType);
             }
 
             @Override
-            public void onPasswordError(FormErrorType errorType) {
-                Assert.fail();
+            public void onPasswordError(@NonNull FormErrorType errorType) {
+
             }
 
             @Override
             public void onUserSignedIn() {
-                Assert.fail();
+
+            }
+
+            @Override
+            public void onUserAlreadySignedIn() {
+
             }
         };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(String email, String password, SignInCallbacks signInCallbacks) {
-                //lets assume we reached to the repository and tried to sign in but the email is not registered
-                signInCallbacks.onEmailIncorrect();
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+                signInLogic(email, password, signInCallbacks);
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
         signInPresenter.onSignInButtonClicked();
-
     }
 
     /**
@@ -382,39 +457,43 @@ public class SignInPresenterImplTest {
 
             @Override
             public void onUnexpectedError() {
-                Assert.fail();
+
             }
 
             @Override
             public String getEmailField() {
-                return "bharathk.sunil.k@gmail.com";
+                return CORRECT_EMAIL;
             }
 
             @Override
             public String getPasswordField() {
-                return "24Bh@rath1996";
+                return INCORRECT_PASSWORD;
             }
 
             @Override
-            public void onEmailError(FormErrorType errorType) {
-                Assert.fail();
+            public void onEmailError(@NonNull FormErrorType errorType) {
+
             }
 
             @Override
-            public void onPasswordError(FormErrorType errorType) {
+            public void onPasswordError(@NonNull FormErrorType errorType) {
                 Assert.assertEquals(FormErrorType.INCORRECT, errorType);
             }
 
             @Override
             public void onUserSignedIn() {
-                Assert.fail();
+
+            }
+
+            @Override
+            public void onUserAlreadySignedIn() {
+
             }
         };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(String email, String password, SignInCallbacks signInCallbacks) {
-                //lets assume we reached to the repository and the passwords didn't match
-                signInCallbacks.onPasswordIncorrect();
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+                signInLogic(email, password, signInCallbacks);
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
@@ -446,32 +525,37 @@ public class SignInPresenterImplTest {
 
             @Override
             public String getEmailField() {
-                return "bharathk.sunil.k@gmail.com";
+                return CORRECT_EMAIL;
             }
 
             @Override
             public String getPasswordField() {
-                return "24Bh@rath1996";
+                return CORRECT_PASSWORD;
             }
 
             @Override
-            public void onEmailError(FormErrorType errorType) {
-                Assert.fail();
+            public void onEmailError(@NonNull FormErrorType errorType) {
+
             }
 
             @Override
-            public void onPasswordError(FormErrorType errorType) {
-                Assert.fail();
+            public void onPasswordError(@NonNull FormErrorType errorType) {
+
             }
 
             @Override
             public void onUserSignedIn() {
-                Assert.fail();
+
+            }
+
+            @Override
+            public void onUserAlreadySignedIn() {
+
             }
         };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(String email, String password, SignInCallbacks signInCallbacks) {
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
                 //lets assume we reached to the repository and something went wrong in the repository
                 signInCallbacks.onRepositoryException();
             }
@@ -482,4 +566,20 @@ public class SignInPresenterImplTest {
 
     }
 
+    /**
+     * This method emulates the logic of the repository
+     *
+     * @param email           the email id
+     * @param password        the password
+     * @param signInCallbacks the signIn callbacks
+     */
+    private void signInLogic(String email, String password, SignInPresenter.Repository.SignInCallbacks signInCallbacks) {
+        if (email.equals(CORRECT_EMAIL)) {
+            if (password.equals(CORRECT_PASSWORD)) {
+                signInCallbacks.onSignInSuccessful();
+            } else
+                signInCallbacks.onPasswordIncorrect();
+        } else
+            signInCallbacks.onEmailIncorrect();
+    }
 }

@@ -37,7 +37,7 @@ public class SharedPreferencesSignInRepositoryImpl implements SignInPresenter.Re
      */
     @Override
     public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                           SignInCallbacks signInCallbacks) {
+                                           @NonNull SignInCallbacks signInCallbacks) {
         if (signInCallbacks == null)
             return;
         //check if the user is already signed in

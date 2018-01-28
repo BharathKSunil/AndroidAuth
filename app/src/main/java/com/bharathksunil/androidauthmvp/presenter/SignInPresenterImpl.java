@@ -25,7 +25,7 @@ public class SignInPresenterImpl implements SignInPresenter {
         this.signInCallbacks = new Repository.SignInCallbacks() {
             @Override
             public void onSignInSuccessful() {
-                if (view!=null) {
+                if (view != null) {
                     view.onProcessEnded();
                     view.onUserSignedIn();
                 }
@@ -33,7 +33,7 @@ public class SignInPresenterImpl implements SignInPresenter {
 
             @Override
             public void onEmailIncorrect() {
-                if (view!=null) {
+                if (view != null) {
                     view.onProcessEnded();
                     view.onEmailError(FormErrorType.INCORRECT);
                 }
@@ -41,7 +41,7 @@ public class SignInPresenterImpl implements SignInPresenter {
 
             @Override
             public void onPasswordIncorrect() {
-                if (view!=null) {
+                if (view != null) {
                     view.onProcessEnded();
                     view.onPasswordError(FormErrorType.INCORRECT);
                 }
@@ -49,9 +49,20 @@ public class SignInPresenterImpl implements SignInPresenter {
 
             @Override
             public void onRepositoryException() {
-                if (view!=null) {
+                if (view != null) {
                     view.onProcessEnded();
                     view.onUnexpectedError();
+                }
+            }
+
+            /**
+             * This is called when the user tries to sign in, but he is already signed in
+             */
+            @Override
+            public void isAlreadySignedIn() {
+                if (view != null) {
+                    view.onProcessEnded();
+                    view.onUserAlreadySignedIn();
                 }
             }
         };
@@ -81,20 +92,17 @@ public class SignInPresenterImpl implements SignInPresenter {
             if (TextUtils.isEmpty(email)) {
                 view.onEmailError(FormErrorType.EMPTY);
                 view.onProcessEnded();
-            }
-            else if (!TextUtils.isEmailValid(email)){
+            } else if (!TextUtils.isEmailValid(email)) {
                 view.onEmailError(FormErrorType.INVALID);
                 view.onProcessEnded();
-            }
-            else if (TextUtils.isEmpty(password)) {
+            } else if (TextUtils.isEmpty(password)) {
                 view.onPasswordError(FormErrorType.EMPTY);
                 view.onProcessEnded();
-            }
-            else if (!TextUtils.isPasswordStrong(password)) {
+            } else if (!TextUtils.isPasswordStrong(password)) {
                 view.onPasswordError(FormErrorType.INVALID);
                 view.onProcessEnded();
             }
-                //if all are valid proceed with signIn
+            //if all are valid proceed with signIn
             else {
                 repository.signInWithEmailAndPassword(email, password, signInCallbacks);
             }
