@@ -75,7 +75,7 @@ public class SignInPresenterImplTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    //============================Presenter-View Tests======================================/
+    //============================Presenter->View Interaction Tests================================/
 
     /**
      * This test checks if the view will be notified if the login is successful
@@ -199,7 +199,7 @@ public class SignInPresenterImplTest {
 
     }
 
-    //==========================Repository-Presenter Tests============================/
+    //=====================Repository->Presenter->View Interaction Tests===========================/
 
     /**
      * This test will check if the presenter is notified if the email id was not in the repository
@@ -277,7 +277,32 @@ public class SignInPresenterImplTest {
     }
 
     /**
-     * This method emulates the logic of the repository
+     * This test will check if the presenter will be notified if there User tries to signIn again
+     */
+    @Test
+    public void detectUserAlreadySignedInTest() {
+
+        when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
+        when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
+
+        SignInPresenter.Repository repository = new SignInPresenter.Repository() {
+            @Override
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallbacks signInCallbacks) {
+                signInCallbacks.isAlreadySignedIn();
+            }
+        };
+
+        SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
+        signInPresenter.setView(view);
+        signInPresenter.onSignInButtonClicked();
+
+        verify(view).onUserAlreadySignedIn();
+
+    }
+
+    /**
+     * This method emulates the logic of the repository Signing In the User
      *
      * @param email           the email id
      * @param password        the password
