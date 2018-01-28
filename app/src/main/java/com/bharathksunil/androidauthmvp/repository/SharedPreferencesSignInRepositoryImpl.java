@@ -80,7 +80,7 @@ public class SharedPreferencesSignInRepositoryImpl implements SignInPresenter.Re
 
         void updateLoginTime(String email) {
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(email + KEY_SIGN_IN_TIME, "");
+            editor.putString(email + KEY_SIGN_IN_TIME, "SomeTime");
             editor.apply();
         }
 
