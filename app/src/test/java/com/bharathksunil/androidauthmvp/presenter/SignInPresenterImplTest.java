@@ -2,10 +2,17 @@ package com.bharathksunil.androidauthmvp.presenter;
 
 import android.support.annotation.NonNull;
 
-import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import java.util.Random;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * This runs some tests on the SignIn presenter. All the tests must pass.
@@ -20,7 +27,8 @@ public class SignInPresenterImplTest {
     private final String INCORRECT_PASSWORD = "Joey@1234";
 
     private String INVALID_EMAIL() {
-        String[] invalidEmails = new String[]{"plainaddress",
+        String[] invalidEmails = new String[]{
+                "plainaddress",
                 "#@%^%#$@#$@#.com",
                 "@example.com",
                 "Joe Smith <email@example.com>",
@@ -61,6 +69,11 @@ public class SignInPresenterImplTest {
         return invalidPasswords[new Random().nextInt(invalidPasswords.length)];
     }
 
+    @Mock
+    private SignInPresenter.View view;
+
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     //============================Presenter-View Tests======================================/
 
@@ -69,55 +82,13 @@ public class SignInPresenterImplTest {
      */
     @Test
     public void successfullySignedInTest() {
-
-        SignInPresenter.View view = new SignInPresenter.View() {
-
-            @Override
-            public void onProcessStarted() {
-            }
-
-            @Override
-            public void onProcessEnded() {
-            }
-
-            @Override
-            public void onUnexpectedError() {
-            }
-
-            @Override
-            public String getEmailField() {
-                return CORRECT_EMAIL;
-            }
-
-            @Override
-            public String getPasswordField() {
-                return CORRECT_PASSWORD;
-            }
-
-            @Override
-            public void onEmailError(@NonNull FormErrorType errorType) {
-
-            }
-
-            @Override
-            public void onPasswordError(@NonNull FormErrorType errorType) {
-
-            }
-
-            @Override
-            public void onUserSignedIn() {
-                Assert.assertEquals(true, true);
-            }
-
-            @Override
-            public void onUserAlreadySignedIn() {
-
-            }
-        };
+        when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
+        when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
 
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallbacks signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
             }
         };
@@ -126,6 +97,7 @@ public class SignInPresenterImplTest {
         signInPresenter.setView(view);
         signInPresenter.onSignInButtonClicked();
 
+        verify(view).onUserSignedIn();
     }
 
     /**
@@ -133,60 +105,22 @@ public class SignInPresenterImplTest {
      */
     @Test
     public void onEmptyEmailEnteredTest() {
+        when(view.getEmailField()).thenReturn("");
+        when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
 
-        SignInPresenter.View view = new SignInPresenter.View() {
-            @Override
-            public void onProcessStarted() {
-            }
-
-            @Override
-            public void onProcessEnded() {
-            }
-
-            @Override
-            public void onUnexpectedError() {
-
-            }
-
-            @Override
-            public String getEmailField() {
-                return "";
-            }
-
-            @Override
-            public String getPasswordField() {
-                return CORRECT_PASSWORD;
-            }
-
-            @Override
-            public void onEmailError(@NonNull FormErrorType errorType) {
-                Assert.assertEquals(FormErrorType.EMPTY, errorType);
-            }
-
-            @Override
-            public void onPasswordError(@NonNull FormErrorType errorType) {
-
-            }
-
-            @Override
-            public void onUserSignedIn() {
-
-            }
-
-            @Override
-            public void onUserAlreadySignedIn() {
-
-            }
-        };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallbacks signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
             }
         };
+
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
         signInPresenter.onSignInButtonClicked();
+
+        verify(view).onEmailError(ArgumentMatchers.eq(FormErrorType.EMPTY));
     }
 
     /**
@@ -195,59 +129,23 @@ public class SignInPresenterImplTest {
     @Test
     public void onInvalidEmailIdEnteredTest() {
 
-        SignInPresenter.View view = new SignInPresenter.View() {
-            @Override
-            public void onProcessStarted() {
-            }
+        String email = INVALID_EMAIL();
+        System.out.println("Incorrect Email Passed: " + email);
 
-            @Override
-            public void onProcessEnded() {
-            }
-
-            @Override
-            public void onUnexpectedError() {
-
-            }
-
-            @Override
-            public String getEmailField() {
-                return INVALID_EMAIL();
-            }
-
-            @Override
-            public String getPasswordField() {
-                return CORRECT_PASSWORD;
-            }
-
-            @Override
-            public void onEmailError(@NonNull FormErrorType errorType) {
-                Assert.assertEquals(FormErrorType.INVALID, errorType);
-            }
-
-            @Override
-            public void onPasswordError(@NonNull FormErrorType errorType) {
-
-            }
-
-            @Override
-            public void onUserSignedIn() {
-
-            }
-
-            @Override
-            public void onUserAlreadySignedIn() {
-
-            }
-        };
+        when(view.getEmailField()).thenReturn(email);
+        when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallbacks signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
         signInPresenter.onSignInButtonClicked();
+
+        verify(view).onEmailError(ArgumentMatchers.eq(FormErrorType.INVALID));
     }
 
     /**
@@ -256,59 +154,21 @@ public class SignInPresenterImplTest {
     @Test
     public void onEmptyPasswordEnteredTest() {
 
-        SignInPresenter.View view = new SignInPresenter.View() {
-            @Override
-            public void onProcessStarted() {
-            }
+        when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
+        when(view.getPasswordField()).thenReturn("");
 
-            @Override
-            public void onProcessEnded() {
-            }
-
-            @Override
-            public void onUnexpectedError() {
-
-            }
-
-            @Override
-            public String getEmailField() {
-                return CORRECT_EMAIL;
-            }
-
-            @Override
-            public String getPasswordField() {
-                return "";
-            }
-
-            @Override
-            public void onEmailError(@NonNull FormErrorType errorType) {
-
-            }
-
-            @Override
-            public void onPasswordError(@NonNull FormErrorType errorType) {
-                Assert.assertEquals(FormErrorType.EMPTY, errorType);
-            }
-
-            @Override
-            public void onUserSignedIn() {
-
-            }
-
-            @Override
-            public void onUserAlreadySignedIn() {
-
-            }
-        };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallbacks signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
         signInPresenter.onSignInButtonClicked();
+
+        verify(view).onPasswordError(ArgumentMatchers.eq(FormErrorType.EMPTY));
     }
 
     /**
@@ -321,59 +181,21 @@ public class SignInPresenterImplTest {
     @Test
     public void onInvalidOrWeakPasswordEnteredTest() {
 
-        SignInPresenter.View view = new SignInPresenter.View() {
-            @Override
-            public void onProcessStarted() {
-            }
+        when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
+        when(view.getPasswordField()).thenReturn(WEAK_PASSWORD());
 
-            @Override
-            public void onProcessEnded() {
-            }
-
-            @Override
-            public void onUnexpectedError() {
-
-            }
-
-            @Override
-            public String getEmailField() {
-                return CORRECT_EMAIL;
-            }
-
-            @Override
-            public String getPasswordField() {
-                return WEAK_PASSWORD();
-            }
-
-            @Override
-            public void onEmailError(@NonNull FormErrorType errorType) {
-
-            }
-
-            @Override
-            public void onPasswordError(@NonNull FormErrorType errorType) {
-                Assert.assertEquals(FormErrorType.INVALID, errorType);
-            }
-
-            @Override
-            public void onUserSignedIn() {
-
-            }
-
-            @Override
-            public void onUserAlreadySignedIn() {
-
-            }
-        };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallbacks signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
         signInPresenter.onSignInButtonClicked();
+
+        verify(view).onPasswordError(ArgumentMatchers.eq(FormErrorType.INVALID));
 
     }
 
@@ -385,59 +207,22 @@ public class SignInPresenterImplTest {
     @Test
     public void onEmailIncorrectTest() {
 
-        SignInPresenter.View view = new SignInPresenter.View() {
-            @Override
-            public void onProcessStarted() {
-            }
+        when(view.getEmailField()).thenReturn(INCORRECT_EMAIL);
+        when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
 
-            @Override
-            public void onProcessEnded() {
-            }
-
-            @Override
-            public void onUnexpectedError() {
-
-            }
-
-            @Override
-            public String getEmailField() {
-                return INCORRECT_EMAIL;
-            }
-
-            @Override
-            public String getPasswordField() {
-                return CORRECT_PASSWORD;
-            }
-
-            @Override
-            public void onEmailError(@NonNull FormErrorType errorType) {
-                Assert.assertEquals(FormErrorType.INCORRECT, errorType);
-            }
-
-            @Override
-            public void onPasswordError(@NonNull FormErrorType errorType) {
-
-            }
-
-            @Override
-            public void onUserSignedIn() {
-
-            }
-
-            @Override
-            public void onUserAlreadySignedIn() {
-
-            }
-        };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallbacks signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
             }
         };
+
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
         signInPresenter.onSignInButtonClicked();
+
+        verify(view).onEmailError(ArgumentMatchers.eq(FormErrorType.INCORRECT));
     }
 
     /**
@@ -446,59 +231,22 @@ public class SignInPresenterImplTest {
     @Test
     public void onPasswordIncorrectTest() {
 
-        SignInPresenter.View view = new SignInPresenter.View() {
-            @Override
-            public void onProcessStarted() {
-            }
+        when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
+        when(view.getPasswordField()).thenReturn(INCORRECT_PASSWORD);
 
-            @Override
-            public void onProcessEnded() {
-            }
-
-            @Override
-            public void onUnexpectedError() {
-
-            }
-
-            @Override
-            public String getEmailField() {
-                return CORRECT_EMAIL;
-            }
-
-            @Override
-            public String getPasswordField() {
-                return INCORRECT_PASSWORD;
-            }
-
-            @Override
-            public void onEmailError(@NonNull FormErrorType errorType) {
-
-            }
-
-            @Override
-            public void onPasswordError(@NonNull FormErrorType errorType) {
-                Assert.assertEquals(FormErrorType.INCORRECT, errorType);
-            }
-
-            @Override
-            public void onUserSignedIn() {
-
-            }
-
-            @Override
-            public void onUserAlreadySignedIn() {
-
-            }
-        };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallbacks signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
             }
         };
+
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
         signInPresenter.onSignInButtonClicked();
+
+        verify(view).onPasswordError(ArgumentMatchers.eq(FormErrorType.INCORRECT));
 
     }
 
@@ -509,60 +257,22 @@ public class SignInPresenterImplTest {
     @Test
     public void onUnexpectedErrorTest() {
 
-        SignInPresenter.View view = new SignInPresenter.View() {
-            @Override
-            public void onProcessStarted() {
-            }
+        when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
+        when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
 
-            @Override
-            public void onProcessEnded() {
-            }
-
-            @Override
-            public void onUnexpectedError() {
-                Assert.assertEquals(1, 1);
-            }
-
-            @Override
-            public String getEmailField() {
-                return CORRECT_EMAIL;
-            }
-
-            @Override
-            public String getPasswordField() {
-                return CORRECT_PASSWORD;
-            }
-
-            @Override
-            public void onEmailError(@NonNull FormErrorType errorType) {
-
-            }
-
-            @Override
-            public void onPasswordError(@NonNull FormErrorType errorType) {
-
-            }
-
-            @Override
-            public void onUserSignedIn() {
-
-            }
-
-            @Override
-            public void onUserAlreadySignedIn() {
-
-            }
-        };
         SignInPresenter.Repository repository = new SignInPresenter.Repository() {
             @Override
-            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull SignInCallbacks signInCallbacks) {
-                //lets assume we reached to the repository and something went wrong in the repository
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallbacks signInCallbacks) {
                 signInCallbacks.onRepositoryException();
             }
         };
+
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
         signInPresenter.onSignInButtonClicked();
+
+        verify(view).onUnexpectedError();
 
     }
 
