@@ -12,6 +12,12 @@ import java.util.regex.Pattern;
 
 public class TextUtils {
 
+    private static final String mustHaveDigit = "(?=.*[0-9])",
+            mustHaveLowerCaseAlpha = "(?=.*[0-9])",
+            mustHaveUpperCaseAlpha = "(?=.*[a-z])",
+            mustHaveSpecialChar = "(?=.*[@#$%^&+=])",
+            mustNotHaveWhiteSpaces = "(?=\\S+$)",
+            mustHaveMinimal8Char = ".{8,}";
     /**
      * Password validation Regular expression, modules:
      * ^                 # start-of-string
@@ -23,7 +29,14 @@ public class TextUtils {
      * .{8,}             # anything, at least eight places though
      * $                 # end-of-string
      */
-    private static final Pattern VALID_PASSWORD_REGEX = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$");
+    private static final Pattern VALID_PASSWORD_REGEX = Pattern.compile(
+            "^"
+                    + mustHaveDigit
+                    + mustHaveLowerCaseAlpha
+                    + mustNotHaveWhiteSpaces
+                    + mustHaveMinimal8Char
+                    + "$"
+    );
 
     /**
      * Phone number Validation Regular Expression to check if
@@ -47,49 +60,53 @@ public class TextUtils {
 
     /**
      * This method checks if the emailID syntax is valid
+     *
      * @param email the emailId to be validated
      * @return true, if the email is syntactically valid
      */
-    public static boolean isEmailValid(CharSequence email){
+    public static boolean isEmailValid(CharSequence email) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
         return matcher.find();
     }
 
     /**
      * It checks if the phone number is a valid mobile number in India
+     *
      * @param phone the mobile number to be validated
      * @return true, if the phone number is valid
      */
-    public static boolean isPhoneNumberValid(CharSequence phone){
-        Matcher phone_matcher= VALID_PHONE_NUMBER_REGEX.matcher(phone);
+    public static boolean isPhoneNumberValid(CharSequence phone) {
+        Matcher phone_matcher = VALID_PHONE_NUMBER_REGEX.matcher(phone);
         return phone_matcher.find();
     }
 
     /**
      * It checks if the password matches these criteria to ensure a strong password
-     *  C1: Contains 8 characters
-     *  C2: Contains minimum one digit
-     *  C3: Contains one Special Character
+     * C1: Contains 8 characters
+     * C2: Contains minimum one digit
+     * C3: Contains one Special Character
+     *
      * @param password the password to be validated
      * @return true, if the password is strong and matches all criteria
      */
-    public static boolean isPasswordStrong(CharSequence password){
+    public static boolean isPasswordStrong(CharSequence password) {
         Matcher matcher = VALID_PASSWORD_REGEX.matcher(password);
         return matcher.find();
     }
 
     /**
      * It checks if the date is in the format DATE_PATTERN and is a valid date
+     *
      * @param date the date string to be checked
      * @return true, if the date is in the format and is valid
      */
-    public static boolean isDateValid(CharSequence date){
+    public static boolean isDateValid(CharSequence date) {
         SimpleDateFormat format = new SimpleDateFormat(DATE_PATTERN, Locale.getDefault());
         format.setLenient(false);
         try {
             format.parse(date.toString());
             return true;
-        }catch (ParseException e){
+        } catch (ParseException e) {
             return false;
         }
     }
@@ -97,19 +114,29 @@ public class TextUtils {
     /**
      * It checks if the string is empty or not
      * This is included here to avoid name collision with android.text.TextUtil
+     *
      * @param string the string to be checked
      * @return true, if the string is empty
      */
-    public static boolean isEmpty(CharSequence string){
+    public static boolean isEmpty(CharSequence string) {
         return string == null || string.length() == 0;
     }
 
-    public static boolean areEqual(CharSequence first, CharSequence second){
+    public static boolean areEqual(CharSequence first, CharSequence second) {
         return android.text.TextUtils.equals(first, second);
     }
 
-    public static boolean isDigitsOnly(CharSequence charSequence){
+    public static boolean isDigitsOnly(CharSequence charSequence) {
         return android.text.TextUtils.isDigitsOnly(charSequence);
+    }
+
+    public static String getEmailAsFirebaseKey(String email) {
+        email = email.toLowerCase();
+        return email.replaceAll("\\.", "_dot_");
+    }
+
+    public static String getEmailFromFirebaseKey(String key) {
+        return key.replaceAll("_dot_", "\\.").toLowerCase();
     }
 
 }
