@@ -6,13 +6,31 @@ import android.support.annotation.Nullable;
 import com.bharathksunil.androidauthmvp.BaseView;
 
 /**
- * This interface is to be used for signIn to the app by the view
- * the view must implement the
+ * This presenter interface is to be used for signing-in to the app
+ * the view must implement the {@link View}
  *
  * @author Bharath on 26-01-2018.
  */
 
 public interface SignInPresenter {
+
+    /**
+     * This method gets the viewInstance for the presenter to interact
+     *
+     * @param view the view implementing the {@link SignInPresenter.View} interface or
+     *             null to disconnect to the presenter.
+     */
+    void setView(@Nullable View view);
+
+    /**
+     * This method starts the signIn Process.
+     */
+    void startSignIn();
+
+    /**
+     * This method resets the password associated with the emailId
+     */
+    void forgottenPassword();
 
     /**
      * Implement this interface on the view (activity or the fragment) for interaction between the
@@ -36,14 +54,14 @@ public interface SignInPresenter {
         /**
          * This method is called when there is an error on the EmailId Field passed
          *
-         * @param errorType the type of error indicating what kind of error was found in the field
+         * @param errorType the type of error
          */
         void onEmailError(@NonNull FormErrorType errorType);
 
         /**
          * This method is called when there is an error on the Password Field passed
          *
-         * @param errorType the type of error indicating what kind of error was found in the field
+         * @param errorType the type of error
          */
         void onPasswordError(@NonNull FormErrorType errorType);
 
@@ -56,6 +74,11 @@ public interface SignInPresenter {
          * This method is called when the user is already signed in and is trying to sign in again
          */
         void onUserAlreadySignedIn();
+
+        /**
+         * This method is called when the password reset mail is sent
+         */
+        void onPasswordResetMailSent();
     }
 
     /**
@@ -67,9 +90,27 @@ public interface SignInPresenter {
      */
     interface Repository {
         /**
+         * This method signs in the user with the email and password
+         *
+         * @param email          the email id of the user
+         * @param password       the password of the user
+         * @param signInCallback callbacks to the presenter
+         */
+        void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                        @NonNull final SignInCallback signInCallback);
+
+        /**
+         * This method resets the password linked to the EmailAddress
+         *
+         * @param email the email of user
+         */
+        void resetPasswordLinkedToEmail(@NonNull String email,
+                                        @NonNull PasswordResetCallback passwordResetCallback);
+
+        /**
          * This is the callback interface for the SignIn method to interact with the presenter
          */
-        interface SignInCallbacks {
+        interface SignInCallback {
             /**
              * Called when the signIn was Successful
              */
@@ -89,7 +130,7 @@ public interface SignInPresenter {
             /**
              * Called whenever there was an exception in processing the request
              */
-            void onRepositoryException();
+            void onRepositoryException(String message);
 
             /**
              * This is called when the user tries to sign in, but he is already signed in
@@ -97,25 +138,18 @@ public interface SignInPresenter {
             void isAlreadySignedIn();
         }
 
-        /**
-         * This method sign in the user with the email and password
-         *
-         * @param email           the email id of the user
-         * @param password        the password of the user
-         * @param signInCallbacks callbacks to the presenter
-         */
-        void signInWithEmailAndPassword(@NonNull String email, @NonNull String password, @NonNull final SignInCallbacks signInCallbacks);
+        interface PasswordResetCallback {
+            /**
+             * Called when the password reset mail was sent successfully
+             */
+            void onPasswordResetMailSent();
+
+            /**
+             * Called when the password could not be reset
+             *
+             * @param message the message describing the error.
+             */
+            void onPasswordResetFailed(@NonNull String message);
+        }
     }
-
-    /**
-     * Call this method in the onResume to set the current view
-     *
-     * @param view the SignInPresenter.View
-     */
-    void setView(@Nullable View view);
-
-    /**
-     * Call this method to perform SignIn
-     */
-    void onSignInButtonClicked();
 }

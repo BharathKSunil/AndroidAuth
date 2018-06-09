@@ -2,6 +2,7 @@ package com.bharathksunil.androidauthmvp;
 
 /**
  * This is the common view operations
+ *
  * @author Bharath on 26-01-2018.
  */
 
@@ -22,5 +23,5 @@ public interface BaseView {
      * Called whenever there was an unexpected error in the process
      * Display any toast or messages to the user indicating that there was an error
      */
-    void onUnexpectedError();
+    void onProcessError(String errorMessage);
 }

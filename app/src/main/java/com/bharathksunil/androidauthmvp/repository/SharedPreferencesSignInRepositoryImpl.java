@@ -31,36 +31,39 @@ public class SharedPreferencesSignInRepositoryImpl implements SignInPresenter.Re
     /**
      * This method sign in the user with the email and password
      *
-     * @param email           the email id of the user
-     * @param password        the password of the user
-     * @param signInCallbacks callbacks to the presenter
+     * @param email          the email id of the user
+     * @param password       the password of the user
+     * @param signInCallback callbacks to the presenter
      */
     @Override
     public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                           @NonNull SignInCallbacks signInCallbacks) {
-        if (signInCallbacks == null)
-            return;
+                                           @NonNull SignInCallback signInCallback) {
         //check if the user is already signed in
         if (manager.isUserLoggedIn())
-            signInCallbacks.isAlreadySignedIn();
+            signInCallback.isAlreadySignedIn();
             //check if the user entered email exists in the shared preferences
         else if (manager.isUserRegistered(email)) {
             //then check if the email entered is correct
             if (manager.validatePassword(email, password)) {
                 manager.updateLoginTime(email);
-                signInCallbacks.onSignInSuccessful();   //show that the signIn was successful
+                signInCallback.onSignInSuccessful();   //show that the signIn was successful
             } else
-                signInCallbacks.onPasswordIncorrect();  //show that the Password Entered was Incorrect
+                signInCallback.onPasswordIncorrect();  //show that the Password Entered was Incorrect
         } else
-            signInCallbacks.onEmailIncorrect();         //show that the email entered is incorrect
+            signInCallback.onEmailIncorrect();         //show that the email entered is incorrect
+
+    }
+
+    @Override
+    public void resetPasswordLinkedToEmail(@NonNull String email,
+                                           @NonNull PasswordResetCallback passwordResetCallback) {
 
     }
 
     private class SessionManager {
-        private SharedPreferences preferences;
-
         private static final String KEY_IS_SIGNED_IN = "IsSignedIn";
         private static final String KEY_SIGN_IN_TIME = "Time";
+        private SharedPreferences preferences;
 
         SessionManager(SharedPreferences preferences) {
             this.preferences = preferences;

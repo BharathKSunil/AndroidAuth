@@ -2,6 +2,8 @@ package com.bharathksunil.androidauthmvp.presenter;
 
 import android.support.annotation.NonNull;
 
+import com.bharathksunil.androidauthmvp.presenter.SignInPresenter.Repository.PasswordResetCallback;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
@@ -11,6 +13,9 @@ import org.mockito.junit.MockitoRule;
 
 import java.util.Random;
 
+import static com.bharathksunil.androidauthmvp.presenter.SignInPresenter.Repository;
+import static com.bharathksunil.androidauthmvp.presenter.SignInPresenter.Repository.SignInCallback;
+import static com.bharathksunil.androidauthmvp.presenter.SignInPresenter.View;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -70,12 +75,12 @@ public class SignInPresenterImplTest {
     }
 
     @Mock
-    private SignInPresenter.View view;
+    private View view;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    //============================Presenter->View Interaction Tests================================/
+    //region Presenter->View Interaction Tests
 
     /**
      * This test checks if the view will be notified if the login is successful
@@ -85,17 +90,23 @@ public class SignInPresenterImplTest {
         when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
         when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
 
-        SignInPresenter.Repository repository = new SignInPresenter.Repository() {
+        Repository repository = new Repository() {
             @Override
             public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                                   @NonNull SignInCallbacks signInCallbacks) {
+                                                   @NonNull SignInCallback signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+
             }
         };
 
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
-        signInPresenter.onSignInButtonClicked();
+        signInPresenter.startSignIn();
 
         verify(view).onUserSignedIn();
     }
@@ -108,17 +119,23 @@ public class SignInPresenterImplTest {
         when(view.getEmailField()).thenReturn("");
         when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
 
-        SignInPresenter.Repository repository = new SignInPresenter.Repository() {
+        Repository repository = new Repository() {
             @Override
             public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                                   @NonNull SignInCallbacks signInCallbacks) {
+                                                   @NonNull SignInCallback signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+
             }
         };
 
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
-        signInPresenter.onSignInButtonClicked();
+        signInPresenter.startSignIn();
 
         verify(view).onEmailError(ArgumentMatchers.eq(FormErrorType.EMPTY));
     }
@@ -134,16 +151,22 @@ public class SignInPresenterImplTest {
 
         when(view.getEmailField()).thenReturn(email);
         when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
-        SignInPresenter.Repository repository = new SignInPresenter.Repository() {
+        Repository repository = new Repository() {
             @Override
             public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                                   @NonNull SignInCallbacks signInCallbacks) {
+                                                   @NonNull SignInCallback signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
-        signInPresenter.onSignInButtonClicked();
+        signInPresenter.startSignIn();
 
         verify(view).onEmailError(ArgumentMatchers.eq(FormErrorType.INVALID));
     }
@@ -157,16 +180,22 @@ public class SignInPresenterImplTest {
         when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
         when(view.getPasswordField()).thenReturn("");
 
-        SignInPresenter.Repository repository = new SignInPresenter.Repository() {
+        Repository repository = new Repository() {
             @Override
             public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                                   @NonNull SignInCallbacks signInCallbacks) {
+                                                   @NonNull SignInCallback signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
-        signInPresenter.onSignInButtonClicked();
+        signInPresenter.startSignIn();
 
         verify(view).onPasswordError(ArgumentMatchers.eq(FormErrorType.EMPTY));
     }
@@ -184,22 +213,106 @@ public class SignInPresenterImplTest {
         when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
         when(view.getPasswordField()).thenReturn(WEAK_PASSWORD());
 
-        SignInPresenter.Repository repository = new SignInPresenter.Repository() {
+        Repository repository = new Repository() {
             @Override
             public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                                   @NonNull SignInCallbacks signInCallbacks) {
+                                                   @NonNull SignInCallback signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+
             }
         };
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
-        signInPresenter.onSignInButtonClicked();
+        signInPresenter.startSignIn();
 
         verify(view).onPasswordError(ArgumentMatchers.eq(FormErrorType.INVALID));
 
     }
 
-    //=====================Repository->Presenter->View Interaction Tests===========================/
+    //region Reset Password Feature Tests
+    @Test
+    public void onResetPasswordPressedWithEmailEnteredTest() {
+
+        when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
+        Repository repository = new Repository() {
+            @Override
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallback signInCallback) {
+
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+                resetPasswordLogic(email, passwordResetCallback);
+
+            }
+        };
+        SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
+        signInPresenter.setView(view);
+        signInPresenter.forgottenPassword();
+
+        verify(view).onPasswordResetMailSent();
+    }
+
+    @Test
+    public void onResetPasswordPressedWithEmptyEmailEntered() {
+
+        when(view.getEmailField()).thenReturn("");
+        Repository repository = new Repository() {
+            @Override
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallback signInCallback) {
+
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+                passwordResetCallback.onPasswordResetFailed("Some Message");
+
+            }
+        };
+        SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
+        signInPresenter.setView(view);
+        signInPresenter.forgottenPassword();
+
+        verify(view).onEmailError(ArgumentMatchers.eq(FormErrorType.EMPTY));
+    }
+
+    @Test
+    public void onResetPasswordPressedWithUnRegisteredEmailEntered() {
+
+        when(view.getEmailField()).thenReturn(INCORRECT_EMAIL);
+        Repository repository = new Repository() {
+            @Override
+            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                   @NonNull SignInCallback signInCallback) {
+
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+                resetPasswordLogic(email, passwordResetCallback);
+
+            }
+        };
+        SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
+        signInPresenter.setView(view);
+        signInPresenter.forgottenPassword();
+
+        verify(view).onEmailError(ArgumentMatchers.eq(FormErrorType.INCORRECT));
+    }
+    //endregion
+    //endregion
+
+    //region Repository->Presenter->View Interaction Tests
 
     /**
      * This test will check if the presenter is notified if the email id was not in the repository
@@ -210,17 +323,23 @@ public class SignInPresenterImplTest {
         when(view.getEmailField()).thenReturn(INCORRECT_EMAIL);
         when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
 
-        SignInPresenter.Repository repository = new SignInPresenter.Repository() {
+        Repository repository = new Repository() {
             @Override
             public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                                   @NonNull SignInCallbacks signInCallbacks) {
+                                                   @NonNull SignInCallback signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+
             }
         };
 
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
-        signInPresenter.onSignInButtonClicked();
+        signInPresenter.startSignIn();
 
         verify(view).onEmailError(ArgumentMatchers.eq(FormErrorType.INCORRECT));
     }
@@ -234,24 +353,30 @@ public class SignInPresenterImplTest {
         when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
         when(view.getPasswordField()).thenReturn(INCORRECT_PASSWORD);
 
-        SignInPresenter.Repository repository = new SignInPresenter.Repository() {
+        Repository repository = new Repository() {
             @Override
             public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                                   @NonNull SignInCallbacks signInCallbacks) {
+                                                   @NonNull SignInCallback signInCallbacks) {
                 signInLogic(email, password, signInCallbacks);
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+
             }
         };
 
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
-        signInPresenter.onSignInButtonClicked();
+        signInPresenter.startSignIn();
 
         verify(view).onPasswordError(ArgumentMatchers.eq(FormErrorType.INCORRECT));
 
     }
 
     /**
-     * This test will check if the presenter will be norified if there was an unexpected error in
+     * This test will check if the presenter will be notified if there was an unexpected error in
      * the repository
      */
     @Test
@@ -260,19 +385,25 @@ public class SignInPresenterImplTest {
         when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
         when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
 
-        SignInPresenter.Repository repository = new SignInPresenter.Repository() {
+        Repository repository = new Repository() {
             @Override
             public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                                   @NonNull SignInCallbacks signInCallbacks) {
-                signInCallbacks.onRepositoryException();
+                                                   @NonNull SignInCallback signInCallbacks) {
+                signInCallbacks.onRepositoryException("Some Message");
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+
             }
         };
 
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
-        signInPresenter.onSignInButtonClicked();
+        signInPresenter.startSignIn();
 
-        verify(view).onUnexpectedError();
+        verify(view).onProcessError("Some Message");
 
     }
 
@@ -285,36 +416,50 @@ public class SignInPresenterImplTest {
         when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
         when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
 
-        SignInPresenter.Repository repository = new SignInPresenter.Repository() {
+        Repository repository = new Repository() {
             @Override
             public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                                   @NonNull SignInCallbacks signInCallbacks) {
+                                                   @NonNull SignInCallback signInCallbacks) {
                 signInCallbacks.isAlreadySignedIn();
+            }
+
+            @Override
+            public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+
             }
         };
 
         SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
         signInPresenter.setView(view);
-        signInPresenter.onSignInButtonClicked();
+        signInPresenter.startSignIn();
 
         verify(view).onUserAlreadySignedIn();
 
     }
+    //endregion
 
     /**
      * This method emulates the logic of the repository Signing In the User
      *
-     * @param email           the email id
-     * @param password        the password
-     * @param signInCallbacks the signIn callbacks
+     * @param email          the email id
+     * @param password       the password
+     * @param signInCallback the signIn callbacks
      */
-    private void signInLogic(String email, String password, SignInPresenter.Repository.SignInCallbacks signInCallbacks) {
+    private void signInLogic(String email, String password,
+                             SignInCallback signInCallback) {
         if (email.equals(CORRECT_EMAIL)) {
             if (password.equals(CORRECT_PASSWORD)) {
-                signInCallbacks.onSignInSuccessful();
+                signInCallback.onSignInSuccessful();
             } else
-                signInCallbacks.onPasswordIncorrect();
+                signInCallback.onPasswordIncorrect();
         } else
-            signInCallbacks.onEmailIncorrect();
+            signInCallback.onEmailIncorrect();
+    }
+
+    private void resetPasswordLogic(String email, PasswordResetCallback passwordResetCallback) {
+        if (email.equals(CORRECT_EMAIL)) {
+            passwordResetCallback.onPasswordResetMailSent();
+        } else passwordResetCallback.onPasswordResetFailed("Invalid EmailID");
     }
 }
