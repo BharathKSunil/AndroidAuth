@@ -57,10 +57,28 @@ public class SharedPreferencesSignInRepositoryImpl implements SignInPresenter.Re
     @Override
     public void resetPasswordLinkedToEmail(@NonNull String email,
                                            @NonNull PasswordResetCallback passwordResetCallback) {
-
+        if (TextUtils.isEmailValid(email))
+            if (manager.isUserRegistered(email)) {
+                //TODO: Connect to an email sending api and send the password to their email
+                //sendEmail(manager.getPassword(email));
+                //passwordResetCallback.onPasswordResetMailSent();
+                passwordResetCallback.onPasswordResetFailed("UnImplemented Feature, Contact Admin");
+            } else
+                passwordResetCallback.onEmailIncorrectError();
+        else
+            passwordResetCallback.onPasswordResetFailed("Invalid Email");
     }
 
-    private class SessionManager {
+    /**
+     * This class stores the user login info and all the registered emails with their respective
+     * passwords in a shared preferences file.
+     * Once a user is registered, the email and corresponding password is stored as email:password
+     * where email is the KEY and password is the VALUE.
+     * This also stores the SignIn Time of the current user.
+     * This uses a key {@link SessionManager#KEY_IS_SIGNED_IN} to store whether a user is currently
+     * signed in.
+     */
+    class SessionManager {
         private static final String KEY_IS_SIGNED_IN = "IsSignedIn";
         private static final String KEY_SIGN_IN_TIME = "Time";
         private SharedPreferences preferences;
@@ -81,9 +99,19 @@ public class SharedPreferencesSignInRepositoryImpl implements SignInPresenter.Re
             return TextUtils.areEqual(preferences.getString(email, ""), password);
         }
 
+        String getPassword(@NonNull String email) {
+            return preferences.getString(email, "");
+        }
+
         void updateLoginTime(String email) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(email + KEY_SIGN_IN_TIME, "SomeTime");
+            editor.apply();
+        }
+
+        void signUpUserByEmail(@NonNull String email, @NonNull String password) {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(email, password);
             editor.apply();
         }
 

@@ -73,10 +73,15 @@ public class SignInPresenterImpl implements SignInPresenter {
         }
 
         @Override
+        public void onEmailIncorrectError() {
+            view.onProcessEnded();
+            view.onEmailError(FormErrorType.INCORRECT);
+        }
+
+        @Override
         public void onPasswordResetFailed(@NonNull String message) {
             if (view != null) {
                 view.onProcessEnded();
-                view.onEmailError(FormErrorType.INCORRECT);
                 view.onProcessError(message);
             }
         }

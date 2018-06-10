@@ -145,6 +145,11 @@ public interface SignInPresenter {
             void onPasswordResetMailSent();
 
             /**
+             * Called when the Email is Incorrect
+             */
+            void onEmailIncorrectError();
+
+            /**
              * Called when the password could not be reset
              *
              * @param message the message describing the error.

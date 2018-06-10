@@ -16,6 +16,7 @@ import java.util.Random;
 import static com.bharathksunil.androidauthmvp.presenter.SignInPresenter.Repository;
 import static com.bharathksunil.androidauthmvp.presenter.SignInPresenter.Repository.SignInCallback;
 import static com.bharathksunil.androidauthmvp.presenter.SignInPresenter.View;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,46 +32,47 @@ public class SignInPresenterImplTest {
     private final String INCORRECT_EMAIL = "joey@gmail.com";
     private final String INCORRECT_PASSWORD = "Joey@1234";
 
+    private String[] invalidEmails = new String[]{
+            "plainaddress",
+            "#@%^%#$@#$@#.com",
+            "@example.com",
+            "Joe Smith <email@example.com>",
+            "email@example@example.com",
+            ".email@example.com",
+            "email.@example.com",
+            "email..email@example.com",
+            "あいうえお@example.com",
+            "email@example.com (Joe Smith)",
+            "email@example",
+            /*"email@-example.com",
+            "email@example.web",*/
+            "email@111.222.333.44444",
+            "email@example..com",
+            "Abc..123@example.com"
+    };
+
     private String INVALID_EMAIL() {
-        String[] invalidEmails = new String[]{
-                "plainaddress",
-                "#@%^%#$@#$@#.com",
-                "@example.com",
-                "Joe Smith <email@example.com>",
-                "email.example.com",
-                "email@example@example.com",
-                ".email@example.com",
-                "email.@example.com",
-                "email..email@example.com",
-                "あいうえお@example.com",
-                "email@example.com (Joe Smith)",
-                "email@example",
-                "email@-example.com",
-                "email@example.web",
-                "email@111.222.333.44444",
-                "email@example..com",
-                "Abc..123@example.com"
-        };
         return invalidEmails[new Random().nextInt(invalidEmails.length)];
     }
 
+    private String[] invalidPasswords =
+            new String[]{
+                    "@",            //no Normal, Capital Characters & no Digit & Length < 8
+                    "1",            //no Normal, Special, Capital Characters & Length < 8
+                    "B",            //no Special Characters & no Digits & Length < 8
+                    "bh",           //no Special, Capital Characters & no Digit & Length < 8
+                    "bh@",          //no Capital Characters & no Digit & Length < 8
+                    "12bh@",        //no Capital Characters & Length < 8
+                    "12Bh",         //no Special Characters & Length < 8
+                    "12Bh@",        //Length < 8
+                    //"12bharath12",  //no Special Character & Capital Character
+                    //"12bh@rath12",  //no Capital Character
+                    //"12Bharath12",  //no Special Characters
+                    "Bharath",      //no Digits & Special Characters & Length < 8
+                    "Bh@rath"       //no Digits & Length < 8
+            };
+
     private String WEAK_PASSWORD() {
-        String[] invalidPasswords =
-                new String[]{
-                        "@",            //no Normal, Capital Characters & no Digit & Length < 8
-                        "1",            //no Normal, Special, Capital Characters & Length < 8
-                        "B",            //no Special Characters & no Digits & Length < 8
-                        "bh",           //no Special, Capital Characters & no Digit & Length < 8
-                        "bh@",          //no Capital Characters & no Digit & Length < 8
-                        "12bh@",        //no Capital Characters & Length < 8
-                        "12Bh",         //no Special Characters & Length < 8
-                        "12Bh@",        //Length < 8
-                        "12bharath12",  //no Special Character & Capital Character
-                        "12bh@rath12",  //no Capital Character
-                        "12Bharath12",  //no Special Characters
-                        "Bharath",      //no Digits & Special Characters & Length < 8
-                        "Bh@rath"       //no Digits & Length < 8
-                };
         return invalidPasswords[new Random().nextInt(invalidPasswords.length)];
     }
 
@@ -146,29 +148,31 @@ public class SignInPresenterImplTest {
     @Test
     public void onInvalidEmailIdEnteredTest() {
 
-        String email = INVALID_EMAIL();
-        System.out.println("Incorrect Email Passed: " + email);
+        for (String email : invalidEmails) {
+            System.out.println("Incorrect Email Passed: " + email);
 
-        when(view.getEmailField()).thenReturn(email);
-        when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
-        Repository repository = new Repository() {
-            @Override
-            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                                   @NonNull SignInCallback signInCallbacks) {
-                signInLogic(email, password, signInCallbacks);
-            }
+            when(view.getEmailField()).thenReturn(email);
+            when(view.getPasswordField()).thenReturn(CORRECT_PASSWORD);
+            Repository repository = new Repository() {
+                @Override
+                public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                       @NonNull SignInCallback signInCallbacks) {
+                    signInLogic(email, password, signInCallbacks);
+                }
 
-            @Override
-            public void resetPasswordLinkedToEmail(@NonNull String email,
-                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+                @Override
+                public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                       @NonNull PasswordResetCallback passwordResetCallback) {
 
-            }
-        };
-        SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
-        signInPresenter.setView(view);
-        signInPresenter.startSignIn();
+                }
+            };
+            SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
+            signInPresenter.setView(view);
+            signInPresenter.startSignIn();
 
-        verify(view).onEmailError(ArgumentMatchers.eq(FormErrorType.INVALID));
+        }
+        verify(view, times(invalidEmails.length)).onEmailError(ArgumentMatchers.eq(FormErrorType.INVALID));
+
     }
 
     /**
@@ -211,26 +215,28 @@ public class SignInPresenterImplTest {
     public void onInvalidOrWeakPasswordEnteredTest() {
 
         when(view.getEmailField()).thenReturn(CORRECT_EMAIL);
-        when(view.getPasswordField()).thenReturn(WEAK_PASSWORD());
+        for (String password : invalidPasswords) {
+            System.out.println("Weak Password Password: " + password);
+            when(view.getPasswordField()).thenReturn(password);
 
-        Repository repository = new Repository() {
-            @Override
-            public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                                   @NonNull SignInCallback signInCallbacks) {
-                signInLogic(email, password, signInCallbacks);
-            }
+            Repository repository = new Repository() {
+                @Override
+                public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
+                                                       @NonNull SignInCallback signInCallbacks) {
+                    signInLogic(email, password, signInCallbacks);
+                }
 
-            @Override
-            public void resetPasswordLinkedToEmail(@NonNull String email,
-                                                   @NonNull PasswordResetCallback passwordResetCallback) {
+                @Override
+                public void resetPasswordLinkedToEmail(@NonNull String email,
+                                                       @NonNull PasswordResetCallback passwordResetCallback) {
 
-            }
-        };
-        SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
-        signInPresenter.setView(view);
-        signInPresenter.startSignIn();
-
-        verify(view).onPasswordError(ArgumentMatchers.eq(FormErrorType.INVALID));
+                }
+            };
+            SignInPresenterImpl signInPresenter = new SignInPresenterImpl(repository);
+            signInPresenter.setView(view);
+            signInPresenter.startSignIn();
+        }
+        verify(view, times(invalidPasswords.length)).onPasswordError(ArgumentMatchers.eq(FormErrorType.INVALID));
 
     }
 
@@ -446,8 +452,8 @@ public class SignInPresenterImplTest {
      * @param password       the password
      * @param signInCallback the signIn callbacks
      */
-    private void signInLogic(String email, String password,
-                             SignInCallback signInCallback) {
+    private void signInLogic(@NonNull String email, @NonNull String password,
+                             @NonNull SignInCallback signInCallback) {
         if (email.equals(CORRECT_EMAIL)) {
             if (password.equals(CORRECT_PASSWORD)) {
                 signInCallback.onSignInSuccessful();
@@ -457,9 +463,10 @@ public class SignInPresenterImplTest {
             signInCallback.onEmailIncorrect();
     }
 
-    private void resetPasswordLogic(String email, PasswordResetCallback passwordResetCallback) {
+    private void resetPasswordLogic(@NonNull String email,
+                                    @NonNull PasswordResetCallback passwordResetCallback) {
         if (email.equals(CORRECT_EMAIL)) {
             passwordResetCallback.onPasswordResetMailSent();
-        } else passwordResetCallback.onPasswordResetFailed("Invalid EmailID");
+        } else passwordResetCallback.onEmailIncorrectError();
     }
 }
