@@ -2,21 +2,23 @@ package com.bharathksunil.util;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ScrollView;
 
 import com.bharathksunil.androidauthmvp.R;
@@ -77,7 +79,7 @@ public class ViewUtils {
      */
     public static void snackBar(@NonNull Activity context, @NonNull String message) {
         Snackbar snackbar = Snackbar.make(context.findViewById(R.id.rootView), message, Snackbar.LENGTH_LONG);
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.accent));
         snackbar.show();
     }
 
@@ -123,7 +125,7 @@ public class ViewUtils {
         for (View v : views) v.setEnabled(true);
     }
 
-    public static void setEnabled(List<Button> views) {
+    public static void setEnabled(List<View> views) {
         for (View v : views) setEnabled(v);
     }
 
@@ -131,7 +133,7 @@ public class ViewUtils {
         for (View v : views) v.setEnabled(false);
     }
 
-    public static void setDisabled(List<Button> views) {
+    public static void setDisabled(List<View> views) {
         for (View v : views) setDisabled(v);
     }
 
@@ -158,6 +160,19 @@ public class ViewUtils {
         if (addToBackStack)
             transaction.addToBackStack(tag);
         transaction.commit();
+    }
+
+    public static AlertDialog createSimpleAlertDialog(@NonNull Context context,
+                                                      @NonNull String title,
+                                                      @NonNull String message,
+                                                      @Nullable AlertDialog.OnClickListener onClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        if (onClickListener != null)
+            builder.setPositiveButton("OK", onClickListener);
+        builder.setCancelable(true);
+        return builder.create();
     }
 
     // To animate view slide out from left to right
