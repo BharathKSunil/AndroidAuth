@@ -18,9 +18,11 @@ public interface PinAuthPresenter {
     }
 
     interface Repository {
-        void authenticateUserPin(@NonNull PinAuthCallback callback);
+        void authenticateUserPin(@NonNull String pin, @NonNull PinAuthCallback callback);
 
         interface PinAuthCallback {
+            void onRepositoryError(String message);
+
             void invalidAuthPin();
 
             void validAuthPin();
