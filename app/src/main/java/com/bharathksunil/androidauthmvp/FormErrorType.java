@@ -1,4 +1,4 @@
-package com.bharathksunil.androidauthmvp.presenter;
+package com.bharathksunil.androidauthmvp;
 
 /**
  * This enum accumulates the different types of errors possible on a form

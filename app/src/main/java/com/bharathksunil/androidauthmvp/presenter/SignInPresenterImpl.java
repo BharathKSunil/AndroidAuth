@@ -3,6 +3,7 @@ package com.bharathksunil.androidauthmvp.presenter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.bharathksunil.androidauthmvp.FormErrorType;
 import com.bharathksunil.util.TextUtils;
 
 import static com.bharathksunil.androidauthmvp.presenter.SignInPresenter.Repository.PasswordResetCallback;

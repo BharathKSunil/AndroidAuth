@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.bharathksunil.androidauthmvp.BaseView;
+import com.bharathksunil.androidauthmvp.FormErrorType;
 
 /**
  * This presenter interface is to be used for signing-in to the app

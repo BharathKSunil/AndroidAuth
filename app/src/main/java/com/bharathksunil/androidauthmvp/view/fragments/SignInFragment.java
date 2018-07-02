@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bharathksunil.androidauthmvp.R;
-import com.bharathksunil.androidauthmvp.presenter.FormErrorType;
+import com.bharathksunil.androidauthmvp.FormErrorType;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenter;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenterImpl;
 import com.bharathksunil.androidauthmvp.repository.FirebaseSignInRepositoryImpl;

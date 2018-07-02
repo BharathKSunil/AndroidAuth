@@ -2,6 +2,8 @@ package com.bharathksunil.androidauthmvp.presenter;
 
 import android.support.annotation.NonNull;
 
+import com.bharathksunil.androidauthmvp.FormErrorType;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;

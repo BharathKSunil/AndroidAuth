@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.bharathksunil.androidauthmvp.BaseView;
+import com.bharathksunil.androidauthmvp.FormErrorType;
 
 /**
  * This presenter deals with the 4 digit pin authentication screen.
