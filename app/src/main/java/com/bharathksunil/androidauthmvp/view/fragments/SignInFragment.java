@@ -44,6 +44,31 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     //region Fragment Methods
     private static final String ARG_APP_ICON_RES = "appIconResource";
     private static final String ARG_APP_NAME_RES = "appNameResource";
+    private static final int INPUT_EMAIL = 0, INPUT_PASSWORD = 1;
+    //region View Declarations
+    @BindView(R.id.iv_app_icon)
+    ImageView mAppIconImage;
+    @BindView(R.id.tv_app_name)
+    TextView mAppName;
+    @BindView(R.id.progress_bar)
+    AVLoadingIndicatorView loadingIndicatorView;
+    @BindViews({R.id.input_email, R.id.input_password})
+    List<TextInputLayout> mTextInputList;
+    @BindViews({R.id.btn_submit, R.id.tv_terms_and_privacy_policy, R.id.tv_reset_password, R.id.tv_sign_up})
+    List<View> mClickableViewList;
+    //endregion
+    @BindString(R.string.err_incorrect_email)
+    String err_incorrectEmail;
+    @BindString(R.string.err_empty_field)
+    String err_emptyField;
+    @BindString(R.string.err_invalid_field)
+    String err_invalidField;
+    @BindString(R.string.err_password_security)
+    String err_passwordNotStrong;
+    @BindString(R.string.err_incorrect_password)
+    String err_incorrectPassword;
+    @BindString(R.string.snack_password_reset_mail_sent)
+    String snack_PasswordResetMailSent;
     @StringRes
     private int mAppNameResource;
     @DrawableRes
@@ -51,7 +76,8 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     @SuppressWarnings("NullableProblems")
     @NonNull
     private OnFragmentInteractionListener mListener;
-
+    private Unbinder mUnbinder;
+    private SignInPresenter mPresenter;
     public SignInFragment() {
         // Required empty public constructor
     }
@@ -77,36 +103,6 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     public void usePresenter(SignInPresenter presenter) {
         mPresenter = presenter;
     }
-    //endregion
-
-    private Unbinder mUnbinder;
-    private SignInPresenter mPresenter;
-
-    //region View Declarations
-    @BindView(R.id.iv_app_icon)
-    ImageView mAppIconImage;
-    @BindView(R.id.tv_app_name)
-    TextView mAppName;
-    @BindView(R.id.progress_bar)
-    AVLoadingIndicatorView loadingIndicatorView;
-    private static final int INPUT_EMAIL = 0, INPUT_PASSWORD = 1;
-    @BindViews({R.id.input_email, R.id.input_password})
-    List<TextInputLayout> mTextInputList;
-    @BindViews({R.id.btn_submit, R.id.tv_terms_and_privacy_policy, R.id.tv_reset_password, R.id.tv_sign_up})
-    List<View> mClickableViewList;
-
-    @BindString(R.string.err_incorrect_email)
-    String err_incorrectEmail;
-    @BindString(R.string.err_empty_field)
-    String err_emptyField;
-    @BindString(R.string.err_invalid_field)
-    String err_invalidField;
-    @BindString(R.string.err_password_security)
-    String err_passwordNotStrong;
-    @BindString(R.string.err_incorrect_password)
-    String err_incorrectPassword;
-    @BindString(R.string.snack_password_reset_mail_sent)
-    String snack_PasswordResetMailSent;
 
     //endregion
 

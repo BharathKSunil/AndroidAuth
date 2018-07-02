@@ -11,6 +11,10 @@ import com.bharathksunil.androidauthmvp.BaseView;
  * {@link #setView(View)} function to pass in the view instance before calling any function in the presenter.
  */
 public interface PinAuthPresenter {
+    void setView(@Nullable View view);
+
+    void pinEntered(@NonNull String pin);
+
     interface View extends BaseView {
         void onAuthPinFieldError(@NonNull FormErrorType formErrorType);
 
@@ -28,8 +32,4 @@ public interface PinAuthPresenter {
             void validAuthPin();
         }
     }
-
-    void setView(@Nullable View view);
-
-    void pinEntered(@NonNull String pin);
 }

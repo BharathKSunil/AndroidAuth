@@ -31,7 +31,8 @@ public class SignInPresenterImplTest {
     private final String CORRECT_PASSWORD = "12Bh@rath12";
     private final String INCORRECT_EMAIL = "joey@gmail.com";
     private final String INCORRECT_PASSWORD = "Joey@1234";
-
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
     private String[] invalidEmails = new String[]{
             "plainaddress",
             "#@%^%#$@#$@#.com",
@@ -50,11 +51,6 @@ public class SignInPresenterImplTest {
             "email@example..com",
             "Abc..123@example.com"
     };
-
-    private String INVALID_EMAIL() {
-        return invalidEmails[new Random().nextInt(invalidEmails.length)];
-    }
-
     private String[] invalidPasswords =
             new String[]{
                     "@",            //no Normal, Capital Characters & no Digit & Length < 8
@@ -71,16 +67,16 @@ public class SignInPresenterImplTest {
                     "Bharath",      //no Digits & Special Characters & Length < 8
                     "Bh@rath"       //no Digits & Length < 8
             };
+    @Mock
+    private View view;
+
+    private String INVALID_EMAIL() {
+        return invalidEmails[new Random().nextInt(invalidEmails.length)];
+    }
 
     private String WEAK_PASSWORD() {
         return invalidPasswords[new Random().nextInt(invalidPasswords.length)];
     }
-
-    @Mock
-    private View view;
-
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     //region Presenter->View Interaction Tests
 
