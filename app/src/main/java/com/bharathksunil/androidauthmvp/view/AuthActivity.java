@@ -6,17 +6,20 @@ import android.support.v7.app.AppCompatActivity;
 import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenterImpl;
 import com.bharathksunil.androidauthmvp.repository.FirebaseSignInRepositoryImpl;
+import com.bharathksunil.androidauthmvp.view.fragments.PinAuthFragment;
 import com.bharathksunil.androidauthmvp.view.fragments.SignInFragment;
 import com.bharathksunil.util.Debug;
 import com.bharathksunil.util.ViewUtils;
 
-public class AuthActivity extends AppCompatActivity implements SignInFragment.OnFragmentInteractionListener {
+public class AuthActivity extends AppCompatActivity implements SignInFragment.OnFragmentInteractionListener,
+        PinAuthFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
-        loadSignInFragment();
+        //loadSignInFragment();
+        loadPinAuthFragment();
     }
 
     //region SignInFragment Methods
@@ -54,5 +57,28 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
     public void loadSignUpScreen() {
         Debug.i("Load SignUp");
     }
+    //endregion
+
+    //region PinAuthFragment
+    private void loadPinAuthFragment() {
+        PinAuthFragment pinAuthFragment = PinAuthFragment.newInstance(
+                R.mipmap.ic_launcher,
+                R.string.app_name
+        );
+        ViewUtils.loadFragment(
+                this,
+                pinAuthFragment,
+                R.id.frame_primary,
+                PinAuthFragment.class.getSimpleName(),
+                false
+        );
+    }
+
+    @Override
+    public void pinAuthenticated() {
+        loadSignInFragment();
+        //todo: Change Required
+    }
+
     //endregion
 }
