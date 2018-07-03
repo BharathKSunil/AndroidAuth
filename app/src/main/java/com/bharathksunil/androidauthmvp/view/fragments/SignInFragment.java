@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.FormErrorType;
+import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenter;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenterImpl;
 import com.bharathksunil.androidauthmvp.repository.FirebaseSignInRepositoryImpl;
@@ -78,6 +78,7 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     private OnFragmentInteractionListener mListener;
     private Unbinder mUnbinder;
     private SignInPresenter mPresenter;
+
     public SignInFragment() {
         // Required empty public constructor
     }
@@ -90,12 +91,12 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
      * @param appNameResource the name of the app to be displayed.
      * @return A new instance of fragment SignInFragment.
      */
-    public static SignInFragment newInstance(@DrawableRes long appIconDrawable,
-                                             @StringRes long appNameResource) {
+    public static SignInFragment newInstance(@DrawableRes int appIconDrawable,
+                                             @StringRes int appNameResource) {
         SignInFragment fragment = new SignInFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_APP_ICON_RES, appIconDrawable);
-        args.putLong(ARG_APP_NAME_RES, appNameResource);
+        args.putInt(ARG_APP_ICON_RES, appIconDrawable);
+        args.putInt(ARG_APP_NAME_RES, appNameResource);
         fragment.setArguments(args);
         return fragment;
     }
@@ -109,9 +110,12 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mAppIconDrawableResource = getArguments().getInt(ARG_APP_ICON_RES);
-            mAppNameResource = getArguments().getInt(ARG_APP_NAME_RES);
+        if (this.getArguments() != null) {
+            mAppIconDrawableResource = getArguments().getInt(ARG_APP_ICON_RES, R.mipmap.ic_launcher);
+            mAppNameResource = getArguments().getInt(ARG_APP_NAME_RES, R.string.app_name);
+        } else {
+            mAppIconDrawableResource = R.mipmap.ic_launcher;
+            mAppNameResource = R.string.app_name;
         }
         if (mPresenter == null)
             mPresenter = new SignInPresenterImpl(new FirebaseSignInRepositoryImpl());
