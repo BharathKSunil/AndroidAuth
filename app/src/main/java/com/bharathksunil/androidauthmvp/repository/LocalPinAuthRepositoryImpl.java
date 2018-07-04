@@ -22,13 +22,13 @@ public class LocalPinAuthRepositoryImpl implements PinAuthPresenter.Repository {
     public void authenticateUserPin(@NonNull String pin, @NonNull PinAuthCallback callback) {
         UserPin userPin = mDBInstance.userDao().getUsersPin();
         if (userPin != null) {
-            if (userPin.getPin().equals(pin))
+            if (userPin.getPin().equals(pin)) {
                 callback.validAuthPin();
-            else
+                mDBInstance.close();
+            } else
                 callback.invalidAuthPin();
         } else
             callback.onRepositoryError("Pin Not Set: Could Not fetch Pin");
-        mDBInstance.endTransaction();
     }
 
 }
