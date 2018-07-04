@@ -3,7 +3,6 @@ package com.bharathksunil.androidauthmvp.view.fragments;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.DrawableRes;
@@ -23,6 +22,7 @@ import com.bharathksunil.androidauthmvp.FormErrorType;
 import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenter;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenterImpl;
+import com.bharathksunil.androidauthmvp.repository.LocalPinAuthRepositoryImpl;
 import com.bharathksunil.util.Debug;
 import com.bharathksunil.util.ViewUtils;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -125,24 +125,11 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
         View view = inflater.inflate(R.layout.fragment_pin_auth, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        //todo: Change this after a PinAuthRepository is implemented
-        mPresenter = new PinAuthPresenterImpl(new PinAuthPresenter.Repository() {
-            @Override
-            public void authenticateUserPin(@NonNull final String pin, @NonNull final PinAuthCallback callback) {
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (pin.equals("1234"))
-                            callback.validAuthPin();
-                        else if (pin.equals("3333"))
-                            callback.onRepositoryError("Server Error, Contact Admin");
-                        else
-                            callback.invalidAuthPin();
-                    }
-                }, 4000);
-            }
-        });
+        mPresenter = new PinAuthPresenterImpl(
+                new LocalPinAuthRepositoryImpl(
+                        requireActivity().getApplicationContext()
+                )
+        );
         mPresenter.setView(this);
 
         mAppIcon.setImageResource(mAppIconDrawableResource);
