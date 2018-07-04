@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,7 +22,6 @@ import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenter;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenterImpl;
 import com.bharathksunil.androidauthmvp.repository.LocalPinAuthRepositoryImpl;
-import com.bharathksunil.util.Debug;
 import com.bharathksunil.util.ViewUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -101,8 +99,8 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            /*throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");*/
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -155,21 +153,23 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
     //region Presenter Methods
     @Override
     public void onAuthPinFieldError(@NonNull FormErrorType formErrorType) {
-        mPinLayout.setAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.shake));
-        /*switch (formErrorType) {
+        vibrate(300);
+        switch (formErrorType) {
             case EMPTY:
+                ViewUtils.errorBar(requireActivity(), R.string.err_empty_field);
                 break;
             case INCORRECT:
+                ViewUtils.errorBar(requireActivity(), R.string.err_incorrect_pin);
                 break;
             case INVALID:
+                ViewUtils.errorBar(requireActivity(), R.string.err_invalid_field);
                 break;
-        }*/
+        }
     }
 
     @Override
     public void pinAuthenticatedSuccessfully() {
         mListener.pinAuthenticated();
-        Debug.toast("Pin Authenticated...", requireContext());
     }
 
     @Override
@@ -192,18 +192,22 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
     }
     //endregion
 
+    private void vibrate(long milliseconds) {
+        Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(milliseconds, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                vibrator.vibrate(milliseconds);
+            }
+        }
+    }
+
     @OnClick({R.id.btn_pin_one, R.id.btn_pin_two, R.id.btn_pin_three, R.id.btn_pin_four,
             R.id.btn_pin_five, R.id.btn_pin_six, R.id.btn_pin_seven, R.id.btn_pin_eight,
             R.id.btn_pin_nine, R.id.btn_pin_zero, R.id.btn_pin_backspace})
     public void onViewClicked(View view) {
-        Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
-        if (vibrator != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                vibrator.vibrate(30);
-            }
-        }
+        vibrate(30);
         switch (view.getId()) {
             case R.id.btn_pin_one:
                 numberEntered("1");

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -77,10 +78,14 @@ public class ViewUtils {
      *
      * @param message the message to be shown
      */
-    public static void snackBar(@NonNull Activity context, @NonNull String message) {
-        Snackbar snackbar = Snackbar.make(context.findViewById(R.id.rootView), message, Snackbar.LENGTH_LONG);
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.accent));
+    public static void snackBar(@NonNull Activity activity, @NonNull String message) {
+        Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.rootView), message, Snackbar.LENGTH_LONG);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(activity, R.color.accent));
         snackbar.show();
+    }
+
+    public static void snackBar(@NonNull Activity activity, @StringRes int message) {
+        errorBar(activity, activity.getString(message));
     }
 
     /**
@@ -88,10 +93,14 @@ public class ViewUtils {
      *
      * @param message the message to be shown
      */
-    public static void errorBar(@NonNull Activity context, @NonNull String message) {
-        Snackbar snackbar = Snackbar.make(context.findViewById(R.id.rootView), message, Snackbar.LENGTH_LONG);
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
+    public static void errorBar(@NonNull Activity activity, @NonNull String message) {
+        Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.rootView), message, Snackbar.LENGTH_LONG);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(activity, android.R.color.holo_red_dark));
         snackbar.show();
+    }
+
+    public static void errorBar(@NonNull Activity activity, @StringRes int message) {
+        errorBar(activity, activity.getString(message));
     }
 
     public static void setVisible(View... views) {

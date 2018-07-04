@@ -28,7 +28,7 @@ public class LocalPinAuthRepositoryImpl implements PinAuthPresenter.Repository {
                 callback.invalidAuthPin();
         } else
             callback.onRepositoryError("Pin Not Set: Could Not fetch Pin");
-
+        mDBInstance.endTransaction();
     }
 
 }

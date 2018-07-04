@@ -22,7 +22,7 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
         loadPinAuthFragment();
     }
 
-    //region SignInFragment Methods
+    //region SignInFragment Listeners
     private void loadSignInFragment() {
         SignInFragment signInFragment = SignInFragment.newInstance(
                 R.mipmap.ic_launcher,
@@ -59,7 +59,7 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
     }
     //endregion
 
-    //region PinAuthFragment
+    //region PinAuthFragment Listeners
     private void loadPinAuthFragment() {
         PinAuthFragment pinAuthFragment = PinAuthFragment.newInstance(
                 R.mipmap.ic_launcher,
@@ -76,8 +76,8 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
 
     @Override
     public void pinAuthenticated() {
+        ViewUtils.snackBar(this, "Pin Authentication Successful");
         loadSignInFragment();
-        //todo: Change Required
     }
 
     //endregion
