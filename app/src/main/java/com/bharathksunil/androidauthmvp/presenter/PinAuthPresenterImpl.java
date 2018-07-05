@@ -1,5 +1,6 @@
 package com.bharathksunil.androidauthmvp.presenter;
 
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -33,28 +34,48 @@ public class PinAuthPresenterImpl implements PinAuthPresenter {
         }
         repository.authenticateUserPin(pin, new Repository.PinAuthCallback() {
             @Override
-            public void onRepositoryError(String message) {
-                if (viewInstance == null)
-                    return;
-                viewInstance.onProcessEnded();
-                viewInstance.onProcessError(message);
+            public void onRepositoryError(final String message) {
+                //TODO: Remove this delay from here
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (viewInstance == null)
+                            return;
+                        viewInstance.onProcessEnded();
+                        viewInstance.onProcessError(message);
+                    }
+                }, 2000);
+
             }
 
             @Override
             public void invalidAuthPin() {
-                if (viewInstance == null)
-                    return;
-                viewInstance.onProcessEnded();
-                viewInstance.onAuthPinFieldError(FormErrorType.INCORRECT);
+                //TODO: Remove this delay from here
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (viewInstance == null)
+                            return;
+                        viewInstance.onProcessEnded();
+                        viewInstance.onAuthPinFieldError(FormErrorType.INCORRECT);
+                    }
+                }, 2000);
 
             }
 
             @Override
             public void validAuthPin() {
-                if (viewInstance == null)
-                    return;
-                viewInstance.onProcessEnded();
-                viewInstance.pinAuthenticatedSuccessfully();
+                //TODO: Remove this delay from here
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (viewInstance == null)
+                            return;
+                        viewInstance.onProcessEnded();
+                        viewInstance.pinAuthenticatedSuccessfully();
+                    }
+                }, 2000);
+
             }
         });
     }

@@ -3,6 +3,7 @@ package com.bharathksunil.androidauthmvp.view.fragments;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.DrawableRes;
@@ -251,7 +252,7 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
             ivPinList.get(mPinStack.size() - 1).setImageResource(R.drawable.pin_background_activated);
         }
         if (mPinStack.size() == 4) {
-            StringBuilder password = new StringBuilder();
+            final StringBuilder password = new StringBuilder();
             for (String s : mPinStack) {
                 password.append(s);
             }

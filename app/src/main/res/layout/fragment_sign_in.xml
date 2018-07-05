@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
+    android:background="@drawable/background_cut_blue"
     android:padding="16dp"
     tools:context=".view.fragments.SignInFragment">
 
@@ -15,30 +16,38 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_email"
+        style="@style/Auth.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_logo"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:theme="@style/Auth.TextInputLayout">
 
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_email_id"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textColor="@color/white" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_password"
+        style="@style/Auth.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/input_email"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:theme="@style/Auth.TextInputLayout"
+        app:hintAnimationEnabled="true"
+        app:passwordToggleEnabled="true">
 
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_password"
-            android:inputType="textWebPassword" />
+            android:inputType="textWebPassword"
+            android:textColor="@color/white" />
     </android.support.design.widget.TextInputLayout>
 
     <TextView
@@ -50,8 +59,7 @@
         android:layout_below="@id/input_password"
         android:layout_marginTop="8dp"
         android:text="@string/tv_forgot_password"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:textColor="@color/accent" />
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
     <Button
         android:id="@+id/btn_submit"
@@ -86,6 +94,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="14dp"
-        android:text="@string/tv_terms_and_policy_signIn" />
+        android:text="@string/tv_terms_and_policy_signIn"
+        android:textColor="@color/secondary_text" />
 
 </RelativeLayout>

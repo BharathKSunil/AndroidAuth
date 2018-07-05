@@ -4,8 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/white"
     tools:context=".view.fragments.PinAuthFragment">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll_circles"
+        android:layout_marginBottom="6dp"
+        android:contentDescription="@string/cd_app_icon"
+        android:src="@color/primary_dark" />
     <!--Icon Layout-->
     <include
         layout="@layout/layout_logo"
