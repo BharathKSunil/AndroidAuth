@@ -8,7 +8,4 @@
 /captures
 .externalNativeBuild
 app/google-services.json
-.idea/sonarIssues.xml
-.idea/caches/build_file_checksums.ser
-.idea/assetWizardSettings.xml
-.idea/caches/build_file_checksums.ser
+.idea/

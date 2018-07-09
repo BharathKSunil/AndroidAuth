@@ -3,7 +3,6 @@ package com.bharathksunil.androidauthmvp.view.fragments;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.DrawableRes;
@@ -124,13 +123,6 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
         View view = inflater.inflate(R.layout.fragment_pin_auth, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        mPresenter = new PinAuthPresenterImpl(
-                new LocalPinAuthRepositoryImpl(
-                        requireActivity().getApplicationContext()
-                )
-        );
-        mPresenter.setView(this);
-
         mAppIcon.setImageResource(mAppIconDrawableResource);
         mAppName.setText(mAppNameResource);
 
@@ -138,10 +130,34 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mPresenter != null) {
+            //fragment is back in view
+            mPresenter.setView(this);
+            onProcessEnded();
+        } else {
+            //fragment is newly created
+            mPresenter = new PinAuthPresenterImpl(
+                    new LocalPinAuthRepositoryImpl(
+                            requireActivity().getApplicationContext()
+                    )
+            );
+            mPresenter.setView(this);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mPresenter != null)
+            mPresenter.setView(null);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
-        mPresenter.setView(null);
     }
 
     @Override

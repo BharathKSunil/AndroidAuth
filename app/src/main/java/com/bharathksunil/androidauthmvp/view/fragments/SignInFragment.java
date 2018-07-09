@@ -108,6 +108,17 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     //endregion
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (this.getArguments() != null) {
@@ -117,8 +128,6 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
             mAppIconDrawableResource = R.mipmap.ic_launcher;
             mAppNameResource = R.string.app_name;
         }
-        if (mPresenter == null)
-            mPresenter = new SignInPresenterImpl(new FirebaseSignInRepositoryImpl());
     }
 
     @Override
@@ -126,7 +135,6 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_in, container, false);
         mUnbinder = ButterKnife.bind(this, view);
-        mPresenter.setView(this);
 
         mAppIconImage.setImageResource(mAppIconDrawableResource);
         mAppName.setText(mAppNameResource);
@@ -135,21 +143,30 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     }
 
     @Override
-    public void onDestroyView() {
-        mPresenter.setView(null);
-        mUnbinder.unbind();
-        super.onDestroyView();
+    public void onResume() {
+        super.onResume();
+        if (mPresenter == null) {
+            //Newly created Fragment
+            mPresenter = new SignInPresenterImpl(new FirebaseSignInRepositoryImpl());
+            mPresenter.setView(this);
+        } else {
+            //existing fragment that came into view
+            mPresenter.setView(this);
+            onProcessEnded();
+        }
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    public void onPause() {
+        super.onPause();
+        if (mPresenter != null)
+            mPresenter.setView(null);
+    }
+
+    @Override
+    public void onDestroyView() {
+        mUnbinder.unbind();
+        super.onDestroyView();
     }
 
     //region Click Listeners
