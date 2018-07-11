@@ -1,11 +1,16 @@
 package com.bharathksunil.androidauthmvp.presenter;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.bharathksunil.androidauthmvp.FormErrorType;
+import com.bharathksunil.androidauthmvp.model.UserPin;
 import com.bharathksunil.util.TextUtils;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+
+import static io.reactivex.schedulers.Schedulers.io;
 
 public class PinAuthPresenterImpl implements PinAuthPresenter {
     @Nullable
@@ -28,55 +33,39 @@ public class PinAuthPresenterImpl implements PinAuthPresenter {
             return;
         viewInstance.onProcessStarted();
         if (TextUtils.isEmpty(pin)) {
-            viewInstance.onAuthPinFieldError(FormErrorType.EMPTY);
+            viewInstance.onAuthPinFieldError("Pin Cannot be Empty");
         } else if (pin.length() != 4) {
-            viewInstance.onAuthPinFieldError(FormErrorType.INVALID);
+            viewInstance.onAuthPinFieldError("Pin Length must be 4");
         }
-        repository.authenticateUserPin(pin, new Repository.PinAuthCallback() {
-            @Override
-            public void onRepositoryError(final String message) {
-                //TODO: Remove this delay from here
-                new Handler().postDelayed(new Runnable() {
+        repository.authenticateUserPin(pin)
+                .subscribeOn(io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<UserPin>() {
                     @Override
-                    public void run() {
-                        if (viewInstance == null)
-                            return;
-                        viewInstance.onProcessEnded();
-                        viewInstance.onProcessError(message);
+                    public void onSubscribe(Disposable d) {
+                        //do nothing
                     }
-                }, 2000);
 
-            }
-
-            @Override
-            public void invalidAuthPin() {
-                //TODO: Remove this delay from here
-                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void run() {
-                        if (viewInstance == null)
-                            return;
-                        viewInstance.onProcessEnded();
-                        viewInstance.onAuthPinFieldError(FormErrorType.INCORRECT);
-                    }
-                }, 2000);
-
-            }
-
-            @Override
-            public void validAuthPin() {
-                //TODO: Remove this delay from here
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                    public void onNext(UserPin userPin) {
                         if (viewInstance == null)
                             return;
                         viewInstance.onProcessEnded();
                         viewInstance.pinAuthenticatedSuccessfully();
                     }
-                }, 2000);
 
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        if (viewInstance == null)
+                            return;
+                        viewInstance.onProcessEnded();
+                        viewInstance.onAuthPinFieldError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        //do nothing
+                    }
+                });
     }
 }

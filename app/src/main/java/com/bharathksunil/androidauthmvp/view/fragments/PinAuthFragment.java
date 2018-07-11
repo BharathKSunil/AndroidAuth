@@ -17,11 +17,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bharathksunil.androidauthmvp.FormErrorType;
 import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenter;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenterImpl;
 import com.bharathksunil.androidauthmvp.repository.LocalPinAuthRepositoryImpl;
+import com.bharathksunil.util.Debug;
 import com.bharathksunil.util.ViewUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -99,7 +99,7 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
+            throw new SecurityException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -169,19 +169,9 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
 
     //region Presenter Methods
     @Override
-    public void onAuthPinFieldError(@NonNull FormErrorType formErrorType) {
+    public void onAuthPinFieldError(@NonNull String errorMessage) {
         vibrate(300);
-        switch (formErrorType) {
-            case EMPTY:
-                ViewUtils.errorBar(requireActivity(), R.string.err_empty_field);
-                break;
-            case INCORRECT:
-                ViewUtils.errorBar(requireActivity(), R.string.err_incorrect_pin);
-                break;
-            case INVALID:
-                ViewUtils.errorBar(requireActivity(), R.string.err_invalid_field);
-                break;
-        }
+        ViewUtils.errorBar(requireActivity(), errorMessage);
     }
 
     @Override
@@ -259,6 +249,8 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
             case R.id.btn_pin_backspace:
                 backspacePressed();
                 break;
+            default:
+                break;
         }
     }
 
@@ -272,12 +264,13 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
             for (String s : mPinStack) {
                 password.append(s);
             }
+            Debug.i("Pin: " + password.toString() + " DeQueue: ");
             mPresenter.pinEntered(password.toString());
         }
     }
 
     private void backspacePressed() {
-        if (mPinStack.size() > 0) {
+        if (!mPinStack.isEmpty()) {
             mPinStack.pop();
             ivPinList.get(mPinStack.size()).setImageResource(R.drawable.pin_background_normal);
         }
@@ -285,7 +278,5 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
 
     public interface OnFragmentInteractionListener {
         void pinAuthenticated();
-
-        //void pinAuthenticationFailed();
     }
 }

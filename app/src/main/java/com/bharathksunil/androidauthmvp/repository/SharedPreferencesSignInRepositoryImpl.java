@@ -3,8 +3,14 @@ package com.bharathksunil.androidauthmvp.repository;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import com.bharathksunil.androidauthmvp.FormErrorType;
+import com.bharathksunil.androidauthmvp.exception.AuthAlreadySignedInError;
+import com.bharathksunil.androidauthmvp.exception.AuthEmailError;
+import com.bharathksunil.androidauthmvp.exception.AuthPasswordError;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenter;
 import com.bharathksunil.util.TextUtils;
+
+import io.reactivex.Observable;
 
 /**
  * This implements the SignInRepository and performs the sign with SharedPreferences as the backend
@@ -31,42 +37,40 @@ public class SharedPreferencesSignInRepositoryImpl implements SignInPresenter.Re
     /**
      * This method sign in the user with the email and password
      *
-     * @param email          the email id of the user
-     * @param password       the password of the user
-     * @param signInCallback callbacks to the presenter
+     * @param email    the email id of the user
+     * @param password the password of the user
      */
     @Override
-    public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                           @NonNull SignInCallback signInCallback) {
+    public Observable<String> signInWithEmailAndPassword(@NonNull String email, @NonNull String password) {
         //check if the user is already signed in
         if (manager.isUserLoggedIn())
-            signInCallback.isAlreadySignedIn();
+            return Observable.error(new AuthAlreadySignedInError());
             //check if the user entered email exists in the shared preferences
         else if (manager.isUserRegistered(email)) {
             //then check if the email entered is correct
             if (manager.validatePassword(email, password)) {
                 manager.updateLoginTime(email);
-                signInCallback.onSignInSuccessful();   //show that the signIn was successful
+                //show that the signIn was successful
+                return Observable.just("Welcome, You have been successfully Signed In");
             } else
-                signInCallback.onPasswordIncorrect();  //show that the Password Entered was Incorrect
+                //show that the Password Entered was Incorrect
+                return Observable.error(new AuthPasswordError(FormErrorType.INCORRECT));
         } else
-            signInCallback.onEmailIncorrect();         //show that the email entered is incorrect
+            //show that the email entered is incorrect
+            return Observable.error(new AuthEmailError(FormErrorType.INCORRECT));
 
     }
 
     @Override
-    public void resetPasswordLinkedToEmail(@NonNull String email,
-                                           @NonNull PasswordResetCallback passwordResetCallback) {
+    public Observable<String> resetPasswordLinkedToEmail(@NonNull String email) {
         if (TextUtils.isEmailValid(email))
             if (manager.isUserRegistered(email)) {
                 //TODO: Connect to an email sending api and send the password to their email
-                //sendEmail(manager.getPassword(email));
-                //passwordResetCallback.onPasswordResetMailSent();
-                passwordResetCallback.onPasswordResetFailed("UnImplemented Feature, Contact Admin");
+                return Observable.error(new Throwable("UnImplemented Feature, Contact Admin"));
             } else
-                passwordResetCallback.onEmailIncorrectError();
+                return Observable.error(new AuthEmailError(FormErrorType.INCORRECT));
         else
-            passwordResetCallback.onPasswordResetFailed("Invalid Email");
+            return Observable.error(new AuthEmailError(FormErrorType.INVALID));
     }
 
     /**

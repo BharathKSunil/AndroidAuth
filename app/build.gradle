@@ -40,6 +40,9 @@ dependencies {
     implementation "com.google.firebase:firebase-database:$FirebaseVersion"
     implementation "com.google.firebase:firebase-storage:$FirebaseVersion"
     implementation "com.google.firebase:firebase-auth:$FirebaseVersion"
+    //Rx
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
     //github libraries
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.wang.avi:library:2.1.3'

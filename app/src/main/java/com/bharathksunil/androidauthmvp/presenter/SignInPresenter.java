@@ -4,7 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.bharathksunil.androidauthmvp.BaseView;
-import com.bharathksunil.androidauthmvp.FormErrorType;
+
+import io.reactivex.Observable;
 
 /**
  * This presenter interface is to be used for signing-in to the app
@@ -54,17 +55,13 @@ public interface SignInPresenter {
 
         /**
          * This method is called when there is an error on the EmailId Field passed
-         *
-         * @param errorType the type of error
          */
-        void onEmailError(@NonNull FormErrorType errorType);
+        void onEmailError(@NonNull String errorMessage);
 
         /**
          * This method is called when there is an error on the Password Field passed
-         *
-         * @param errorType the type of error
          */
-        void onPasswordError(@NonNull FormErrorType errorType);
+        void onPasswordError(@NonNull String errorMessage);
 
         /**
          * This method is called when the user was successfully signed in
@@ -93,69 +90,16 @@ public interface SignInPresenter {
         /**
          * This method signs in the user with the email and password
          *
-         * @param email          the email id of the user
-         * @param password       the password of the user
-         * @param signInCallback callbacks to the presenter
+         * @param email    the email id of the user
+         * @param password the password of the user
          */
-        void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                        @NonNull final SignInCallback signInCallback);
+        Observable<String> signInWithEmailAndPassword(@NonNull final String email, @NonNull final String password);
 
         /**
          * This method resets the password linked to the EmailAddress
          *
          * @param email the email of user
          */
-        void resetPasswordLinkedToEmail(@NonNull String email,
-                                        @NonNull PasswordResetCallback passwordResetCallback);
-
-        /**
-         * This is the callback interface for the SignIn method to interact with the presenter
-         */
-        interface SignInCallback {
-            /**
-             * Called when the signIn was Successful
-             */
-            void onSignInSuccessful();
-
-            /**
-             * Called when the Email provided was incorrect
-             * i.e., was not registered in the repository
-             */
-            void onEmailIncorrect();
-
-            /**
-             * Called when the password provided was incorrect
-             */
-            void onPasswordIncorrect();
-
-            /**
-             * Called whenever there was an exception in processing the request
-             */
-            void onRepositoryException(String message);
-
-            /**
-             * This is called when the user tries to sign in, but he is already signed in
-             */
-            void isAlreadySignedIn();
-        }
-
-        interface PasswordResetCallback {
-            /**
-             * Called when the password reset mail was sent successfully
-             */
-            void onPasswordResetMailSent();
-
-            /**
-             * Called when the Email is Incorrect
-             */
-            void onEmailIncorrectError();
-
-            /**
-             * Called when the password could not be reset
-             *
-             * @param message the message describing the error.
-             */
-            void onPasswordResetFailed(@NonNull String message);
-        }
+        Observable<String> resetPasswordLinkedToEmail(@NonNull final String email);
     }
 }

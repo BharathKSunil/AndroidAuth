@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bharathksunil.androidauthmvp.FormErrorType;
 import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenter;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenterImpl;
@@ -24,7 +23,6 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
 
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
@@ -44,7 +42,8 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     //region Fragment Methods
     private static final String ARG_APP_ICON_RES = "appIconResource";
     private static final String ARG_APP_NAME_RES = "appNameResource";
-    private static final int INPUT_EMAIL = 0, INPUT_PASSWORD = 1;
+    private static final int INPUT_EMAIL = 0;
+    private static final int INPUT_PASSWORD = 1;
     //region View Declarations
     @BindView(R.id.iv_app_icon)
     ImageView mAppIconImage;
@@ -57,24 +56,11 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     @BindViews({R.id.btn_submit, R.id.tv_terms_and_privacy_policy, R.id.tv_reset_password, R.id.tv_sign_up})
     List<View> mClickableViewList;
     //endregion
-    @BindString(R.string.err_incorrect_email)
-    String err_incorrectEmail;
-    @BindString(R.string.err_empty_field)
-    String err_emptyField;
-    @BindString(R.string.err_invalid_field)
-    String err_invalidField;
-    @BindString(R.string.err_password_security)
-    String err_passwordNotStrong;
-    @BindString(R.string.err_incorrect_password)
-    String err_incorrectPassword;
-    @BindString(R.string.snack_password_reset_mail_sent)
-    String snack_PasswordResetMailSent;
+    String snackPasswordResetMailSent;
     @StringRes
     private int mAppNameResource;
     @DrawableRes
     private int mAppIconDrawableResource;
-    @SuppressWarnings("NullableProblems")
-    @NonNull
     private OnFragmentInteractionListener mListener;
     private Unbinder mUnbinder;
     private SignInPresenter mPresenter;
@@ -113,7 +99,7 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
+            throw new SecurityException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -216,33 +202,13 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     }
 
     @Override
-    public void onEmailError(@NonNull FormErrorType errorType) {
-        switch (errorType) {
-            case EMPTY:
-                mTextInputList.get(INPUT_EMAIL).setError(err_emptyField);
-                break;
-            case INVALID:
-                mTextInputList.get(INPUT_EMAIL).setError(err_invalidField);
-                break;
-            case INCORRECT:
-                mTextInputList.get(INPUT_EMAIL).setError(err_incorrectEmail);
-                break;
-        }
+    public void onEmailError(@NonNull String errorMessage) {
+        mTextInputList.get(INPUT_EMAIL).setError(errorMessage);
     }
 
     @Override
-    public void onPasswordError(@NonNull FormErrorType errorType) {
-        switch (errorType) {
-            case EMPTY:
-                mTextInputList.get(INPUT_PASSWORD).setError(err_emptyField);
-                break;
-            case INVALID:
-                mTextInputList.get(INPUT_PASSWORD).setError(err_passwordNotStrong);
-                break;
-            case INCORRECT:
-                mTextInputList.get(INPUT_PASSWORD).setError(err_incorrectPassword);
-                break;
-        }
+    public void onPasswordError(@NonNull String errorMessage) {
+        mTextInputList.get(INPUT_PASSWORD).setError(errorMessage);
     }
 
     @Override
@@ -257,7 +223,7 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
 
     @Override
     public void onPasswordResetMailSent() {
-        ViewUtils.snackBar(requireActivity(), snack_PasswordResetMailSent);
+        ViewUtils.snackBar(requireActivity(), snackPasswordResetMailSent);
     }
 
     @Override

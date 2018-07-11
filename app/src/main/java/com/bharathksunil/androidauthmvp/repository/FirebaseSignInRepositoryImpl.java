@@ -2,8 +2,11 @@ package com.bharathksunil.androidauthmvp.repository;
 
 import android.support.annotation.NonNull;
 
+import com.bharathksunil.androidauthmvp.FormErrorType;
+import com.bharathksunil.androidauthmvp.exception.AuthAlreadySignedInError;
+import com.bharathksunil.androidauthmvp.exception.AuthEmailError;
+import com.bharathksunil.androidauthmvp.exception.AuthPasswordError;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenter;
-import com.bharathksunil.util.TextUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -11,6 +14,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 
 /**
  * This implements the {@link SignInPresenter.Repository} and performs the sign with firebase as the backend
@@ -21,54 +28,59 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 public class FirebaseSignInRepositoryImpl implements SignInPresenter.Repository {
 
     @Override
-    public void signInWithEmailAndPassword(@NonNull String email, @NonNull String password,
-                                           @NonNull final SignInCallback signInCallback) {
+    public Observable<String> signInWithEmailAndPassword(@NonNull final String email, @NonNull final String password) {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            signInCallback.isAlreadySignedIn();
-            return;
+            return Observable.error(new AuthAlreadySignedInError());
         }
 
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(
-                email,
-                password
-        ).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        return Observable.create(new ObservableOnSubscribe<String>() {
             @Override
-            public void onSuccess(AuthResult authResult) {
-                signInCallback.onSignInSuccessful();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e instanceof FirebaseAuthInvalidCredentialsException)
-                    signInCallback.onPasswordIncorrect();
-                else if (e instanceof FirebaseAuthInvalidUserException)
-                    signInCallback.onEmailIncorrect();
-                else
-                    signInCallback.onRepositoryException(e.getMessage());
+            public void subscribe(final ObservableEmitter<String> emitter) {
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(
+                        email,
+                        password
+                ).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        emitter.onNext("Welcome, You have been successfully signed in");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if (e instanceof FirebaseAuthInvalidCredentialsException)
+                            emitter.onError(new AuthPasswordError(FormErrorType.INCORRECT));
+                        else if (e instanceof FirebaseAuthInvalidUserException)
+                            emitter.onError(new AuthEmailError(FormErrorType.INCORRECT));
+                        else
+                            emitter.onError(new Throwable(e.getLocalizedMessage()));
+                    }
+                });
             }
         });
     }
 
     @Override
-    public void resetPasswordLinkedToEmail(@NonNull String email,
-                                           @NonNull final PasswordResetCallback passwordResetCallback) {
-        if (TextUtils.isEmailValid(email)) {
-            FirebaseAuth.getInstance().sendPasswordResetEmail(email)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            passwordResetCallback.onPasswordResetMailSent();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            if (e instanceof FirebaseAuthEmailException || e instanceof FirebaseAuthInvalidUserException)
-                                passwordResetCallback.onEmailIncorrectError();
-                            else passwordResetCallback.onPasswordResetFailed(e.getMessage());
-                        }
-                    });
-        } else
-            passwordResetCallback.onEmailIncorrectError();
+    public Observable<String> resetPasswordLinkedToEmail(@NonNull final String email) {
+        return Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(final ObservableEmitter<String> emitter) {
+                FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                emitter.onNext("Password Reset mail sent");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                if (e instanceof FirebaseAuthEmailException || e instanceof FirebaseAuthInvalidUserException)
+                                    emitter.onError(new AuthEmailError(FormErrorType.INCORRECT));
+                                else
+                                    emitter.onError(e.getCause());
+                            }
+                        });
+            }
+        });
     }
 }

@@ -4,7 +4,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.bharathksunil.androidauthmvp.BaseView;
-import com.bharathksunil.androidauthmvp.FormErrorType;
+import com.bharathksunil.androidauthmvp.model.UserPin;
+
+import io.reactivex.Observable;
 
 /**
  * This presenter deals with the 4 digit pin authentication screen.
@@ -17,20 +19,12 @@ public interface PinAuthPresenter {
     void pinEntered(@NonNull String pin);
 
     interface View extends BaseView {
-        void onAuthPinFieldError(@NonNull FormErrorType formErrorType);
+        void onAuthPinFieldError(@NonNull String errorMessage);
 
         void pinAuthenticatedSuccessfully();
     }
 
     interface Repository {
-        void authenticateUserPin(@NonNull String pin, @NonNull PinAuthCallback callback);
-
-        interface PinAuthCallback {
-            void onRepositoryError(String message);
-
-            void invalidAuthPin();
-
-            void validAuthPin();
-        }
+        Observable<UserPin> authenticateUserPin(@NonNull String pin);
     }
 }

@@ -7,6 +7,10 @@ import android.support.annotation.NonNull;
 import com.bharathksunil.androidauthmvp.model.UserPin;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenter;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+
 public class LocalPinAuthRepositoryImpl implements PinAuthPresenter.Repository {
     private UserPinDatabase mDBInstance;
 
@@ -15,20 +19,27 @@ public class LocalPinAuthRepositoryImpl implements PinAuthPresenter.Repository {
                 applicationContext,
                 UserPinDatabase.class,
                 "local_store"
-        ).allowMainThreadQueries().build();
+        ).build();
     }
 
     @Override
-    public void authenticateUserPin(@NonNull String pin, @NonNull PinAuthCallback callback) {
-        UserPin userPin = mDBInstance.userDao().getUsersPin();
-        if (userPin != null) {
-            if (userPin.getPin().equals(pin)) {
-                callback.validAuthPin();
-                mDBInstance.close();
-            } else
-                callback.invalidAuthPin();
-        } else
-            callback.onRepositoryError("Pin Not Set: Could Not fetch Pin");
+    public Observable<UserPin> authenticateUserPin(@NonNull final String pin) {
+        return Observable.create(
+                new ObservableOnSubscribe<UserPin>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<UserPin> emitter) {
+                        UserPin userPin = mDBInstance.userDao().getUsersPin();
+                        if (userPin != null) {
+                            if (userPin.getPin().equals(pin)) {
+                                emitter.onNext(userPin);
+                                mDBInstance.close();
+                            } else
+                                emitter.onError(new Throwable("Incorrect Pin, Retry"));
+                        } else
+                            emitter.onError(new Throwable("Pin Not Set"));
+                    }
+                }
+        );
     }
 
 }
