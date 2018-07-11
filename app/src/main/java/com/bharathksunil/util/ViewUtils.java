@@ -3,6 +3,7 @@ package com.bharathksunil.util;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -94,7 +95,7 @@ public class ViewUtils {
      * @param message the message to be shown
      */
     public static void errorBar(@NonNull Activity activity, @NonNull String message) {
-        Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.rootView), message, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.rootView), message, 4000);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(activity, android.R.color.holo_red_dark));
         snackbar.show();
     }
@@ -175,7 +176,12 @@ public class ViewUtils {
                                                       @NonNull String title,
                                                       @NonNull String message,
                                                       @Nullable AlertDialog.OnClickListener onClickListener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(context);
+        }
         builder.setTitle(title);
         builder.setMessage(message);
         if (onClickListener != null)

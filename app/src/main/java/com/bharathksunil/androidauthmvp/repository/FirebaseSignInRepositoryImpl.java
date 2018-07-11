@@ -63,7 +63,7 @@ public class FirebaseSignInRepositoryImpl implements SignInPresenter.Repository 
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            if (e instanceof FirebaseAuthEmailException)
+                            if (e instanceof FirebaseAuthEmailException || e instanceof FirebaseAuthInvalidUserException)
                                 passwordResetCallback.onEmailIncorrectError();
                             else passwordResetCallback.onPasswordResetFailed(e.getMessage());
                         }

@@ -174,16 +174,15 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     public void onForgotPasswordPressed() {
         ViewUtils.createSimpleAlertDialog(
                 requireContext(),
-                "Reset Password?",
-                "Are you sure you want to reset your password?" +
-                        "\nA Password reset link will be sent to your email ID",
+                "Are you sure you want to reset your password?",
+                "A Password reset link will be sent to your email ID",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mPresenter.forgottenPassword();
                     }
                 }
-        );
+        ).show();
     }
 
     @OnClick(R.id.tv_sign_up)
@@ -263,7 +262,7 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
 
     @Override
     public void onProcessStarted() {
-        loadingIndicatorView.show();
+        loadingIndicatorView.smoothToShow();
         ViewUtils.setDisabled(
                 mTextInputList.get(INPUT_PASSWORD),
                 mTextInputList.get(INPUT_EMAIL)
@@ -273,7 +272,7 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
 
     @Override
     public void onProcessEnded() {
-        loadingIndicatorView.hide();
+        loadingIndicatorView.smoothToHide();
         ViewUtils.setEnabled(
                 mTextInputList.get(INPUT_PASSWORD),
                 mTextInputList.get(INPUT_EMAIL)

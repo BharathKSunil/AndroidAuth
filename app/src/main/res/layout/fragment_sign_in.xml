@@ -59,7 +59,8 @@
         android:layout_below="@id/input_password"
         android:layout_marginTop="8dp"
         android:text="@string/tv_forgot_password"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/btn_submit"
@@ -78,7 +79,8 @@
         android:layout_below="@+id/btn_submit"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="14dp"
-        android:text="@string/tv_please_register" />
+        android:text="@string/tv_please_register"
+        android:textColor="@color/white"/>
 
     <include
         layout="@layout/layout_loading_view"

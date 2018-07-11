@@ -191,7 +191,7 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
 
     @Override
     public void onProcessStarted() {
-        mLoadingIndicatorView.show();
+        mLoadingIndicatorView.smoothToShow();
         ViewUtils.setDisabled(mButtonsListView);
     }
 
@@ -199,7 +199,7 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
     public void onProcessEnded() {
         for (int i = mPinStack.size(); i > 0; i--)
             backspacePressed();
-        mLoadingIndicatorView.hide();
+        mLoadingIndicatorView.smoothToHide();
         ViewUtils.setEnabled(mButtonsListView);
     }
 
