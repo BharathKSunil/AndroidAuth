@@ -24,7 +24,7 @@ public class PinAuthPresenterImpl implements PinAuthPresenter {
     @Override
     public void setView(@Nullable View view) {
         this.mViewInstance = view;
-        if (view == null && mDisposable != null && !mDisposable.isDisposed())
+        if (view == null && mDisposable != null)
             mDisposable.dispose();
     }
 

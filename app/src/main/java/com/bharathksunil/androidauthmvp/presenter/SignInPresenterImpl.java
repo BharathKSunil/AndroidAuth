@@ -37,7 +37,7 @@ public class SignInPresenterImpl implements SignInPresenter {
     @Override
     public void setView(@Nullable View view) {
         this.mViewInstance = view;
-        if (view == null && mDisposable != null && !mDisposable.isDisposed())
+        if (view == null && mDisposable != null)
             mDisposable.dispose();
     }
 
