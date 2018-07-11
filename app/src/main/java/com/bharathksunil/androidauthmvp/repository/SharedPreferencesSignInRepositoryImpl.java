@@ -10,7 +10,7 @@ import com.bharathksunil.androidauthmvp.exception.AuthPasswordError;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenter;
 import com.bharathksunil.util.TextUtils;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * This implements the SignInRepository and performs the sign with SharedPreferences as the backend
@@ -41,36 +41,36 @@ public class SharedPreferencesSignInRepositoryImpl implements SignInPresenter.Re
      * @param password the password of the user
      */
     @Override
-    public Observable<String> signInWithEmailAndPassword(@NonNull String email, @NonNull String password) {
+    public Single<String> signInWithEmailAndPassword(@NonNull String email, @NonNull String password) {
         //check if the user is already signed in
         if (manager.isUserLoggedIn())
-            return Observable.error(new AuthAlreadySignedInError());
+            return Single.error(new AuthAlreadySignedInError());
             //check if the user entered email exists in the shared preferences
         else if (manager.isUserRegistered(email)) {
             //then check if the email entered is correct
             if (manager.validatePassword(email, password)) {
                 manager.updateLoginTime(email);
                 //show that the signIn was successful
-                return Observable.just("Welcome, You have been successfully Signed In");
+                return Single.just("Welcome, You have been successfully Signed In");
             } else
                 //show that the Password Entered was Incorrect
-                return Observable.error(new AuthPasswordError(FormErrorType.INCORRECT));
+                return Single.error(new AuthPasswordError(FormErrorType.INCORRECT));
         } else
             //show that the email entered is incorrect
-            return Observable.error(new AuthEmailError(FormErrorType.INCORRECT));
+            return Single.error(new AuthEmailError(FormErrorType.INCORRECT));
 
     }
 
     @Override
-    public Observable<String> resetPasswordLinkedToEmail(@NonNull String email) {
+    public Single<String> resetPasswordLinkedToEmail(@NonNull String email) {
         if (TextUtils.isEmailValid(email))
             if (manager.isUserRegistered(email)) {
                 //TODO: Connect to an email sending api and send the password to their email
-                return Observable.error(new Throwable("UnImplemented Feature, Contact Admin"));
+                return Single.error(new Throwable("UnImplemented Feature, Contact Admin"));
             } else
-                return Observable.error(new AuthEmailError(FormErrorType.INCORRECT));
+                return Single.error(new AuthEmailError(FormErrorType.INCORRECT));
         else
-            return Observable.error(new AuthEmailError(FormErrorType.INVALID));
+            return Single.error(new AuthEmailError(FormErrorType.INVALID));
     }
 
     /**

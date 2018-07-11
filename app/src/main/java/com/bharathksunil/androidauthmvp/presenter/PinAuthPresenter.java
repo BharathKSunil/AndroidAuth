@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import com.bharathksunil.androidauthmvp.BaseView;
 import com.bharathksunil.androidauthmvp.model.UserPin;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * This presenter deals with the 4 digit pin authentication screen.
@@ -25,6 +25,6 @@ public interface PinAuthPresenter {
     }
 
     interface Repository {
-        Observable<UserPin> authenticateUserPin(@NonNull String pin);
+        Single<UserPin> authenticateUserPin(@NonNull String pin);
     }
 }

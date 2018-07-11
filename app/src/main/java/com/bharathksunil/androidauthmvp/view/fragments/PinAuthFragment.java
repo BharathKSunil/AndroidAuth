@@ -21,7 +21,6 @@ import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenter;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenterImpl;
 import com.bharathksunil.androidauthmvp.repository.LocalPinAuthRepositoryImpl;
-import com.bharathksunil.util.Debug;
 import com.bharathksunil.util.ViewUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -264,7 +263,6 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
             for (String s : mPinStack) {
                 password.append(s);
             }
-            Debug.i("Pin: " + password.toString() + " DeQueue: ");
             mPresenter.pinEntered(password.toString());
         }
     }

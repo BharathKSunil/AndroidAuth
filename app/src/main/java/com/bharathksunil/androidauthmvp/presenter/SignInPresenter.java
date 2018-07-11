@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.bharathksunil.androidauthmvp.BaseView;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * This presenter interface is to be used for signing-in to the app
@@ -93,13 +93,13 @@ public interface SignInPresenter {
          * @param email    the email id of the user
          * @param password the password of the user
          */
-        Observable<String> signInWithEmailAndPassword(@NonNull final String email, @NonNull final String password);
+        Single<String> signInWithEmailAndPassword(@NonNull final String email, @NonNull final String password);
 
         /**
          * This method resets the password linked to the EmailAddress
          *
          * @param email the email of user
          */
-        Observable<String> resetPasswordLinkedToEmail(@NonNull final String email);
+        Single<String> resetPasswordLinkedToEmail(@NonNull final String email);
     }
 }
