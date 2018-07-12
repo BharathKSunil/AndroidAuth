@@ -3,6 +3,7 @@ package com.bharathksunil.androidauthmvp.presenter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.bharathksunil.androidauthmvp.exception.AuthPinError;
 import com.bharathksunil.util.TextUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -35,9 +36,13 @@ public class PinAuthPresenterImpl implements PinAuthPresenter {
 
         mViewInstance.onProcessStarted();
         if (TextUtils.isEmpty(pin)) {
-            mViewInstance.onAuthPinFieldError("Pin Cannot be Empty");
+            mViewInstance.onProcessEnded();
+            mViewInstance.onAuthPinFieldError(AuthPinError.ERROR_EMPTY_MESSAGE);
+            return;
         } else if (pin.length() != 4) {
-            mViewInstance.onAuthPinFieldError("Pin Length must be 4");
+            mViewInstance.onProcessEnded();
+            mViewInstance.onAuthPinFieldError(AuthPinError.ERROR_INVALID_MESSAGE);
+            return;
         }
 
         mDisposable = mRepository.authenticateUserPin(pin)
@@ -53,8 +58,13 @@ public class PinAuthPresenterImpl implements PinAuthPresenter {
                         throwable -> {
                             if (mViewInstance == null)
                                 return;
-                            mViewInstance.onProcessEnded();
-                            mViewInstance.onAuthPinFieldError(throwable.getMessage());
+                            if (throwable instanceof AuthPinError) {
+                                mViewInstance.onProcessEnded();
+                                mViewInstance.onAuthPinFieldError(throwable.getMessage());
+                            } else {
+                                mViewInstance.onProcessEnded();
+                                mViewInstance.onProcessError(throwable.getMessage());
+                            }
                         }
                 );
     }

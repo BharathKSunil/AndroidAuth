@@ -4,13 +4,14 @@ import android.support.annotation.NonNull;
 
 import com.bharathksunil.androidauthmvp.FormErrorType;
 
-public class AuthEmailError extends Throwable {
-    public static final String ERROR_INVALID_MESSAGE = "Invalid Email Address";
-    public static final String ERROR_INCORRECT_MESSAGE = "Incorrect Email Address";
-    public static final String ERROR_EMPTY_MESSAGE = "Email Field Cannot be Empty";
+public class AuthPinError extends Throwable {
+    public static final String ERROR_INVALID_MESSAGE = "Invalid Pin, Check if Pin has a minimum length of 4";
+    public static final String ERROR_INCORRECT_MESSAGE = "Incorrect Pin, Kindly Retry";
+    public static final String ERROR_EMPTY_MESSAGE = "Pin Field Cannot be Empty";
+
     private String mErrorMessage;
 
-    public AuthEmailError(@NonNull FormErrorType formErrorType) {
+    public AuthPinError(@NonNull FormErrorType formErrorType) {
         switch (formErrorType) {
             case INVALID:
                 mErrorMessage = ERROR_INVALID_MESSAGE;
@@ -29,4 +30,5 @@ public class AuthEmailError extends Throwable {
     public String getMessage() {
         return mErrorMessage;
     }
+
 }

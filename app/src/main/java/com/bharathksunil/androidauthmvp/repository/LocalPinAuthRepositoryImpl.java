@@ -4,6 +4,8 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.bharathksunil.androidauthmvp.FormErrorType;
+import com.bharathksunil.androidauthmvp.exception.AuthPinError;
 import com.bharathksunil.androidauthmvp.model.UserPin;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenter;
 
@@ -33,7 +35,7 @@ public class LocalPinAuthRepositoryImpl implements PinAuthPresenter.Repository {
                                     emitter.onSuccess(userPin);
                                     mDBInstance.close();
                                 } else
-                                    emitter.onError(new Throwable("Incorrect Pin, Retry"));
+                                    emitter.onError(new AuthPinError(FormErrorType.INCORRECT));
                             } else
                                 emitter.onError(new Throwable("Pin Not Set"));
                         }

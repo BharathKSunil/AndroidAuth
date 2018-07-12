@@ -86,19 +86,19 @@ public class SignInPresenterImpl implements SignInPresenter {
         if (mViewInstance == null)
             return false;
         if (TextUtils.isEmpty(email)) {
-            mViewInstance.onEmailError("Email Address Cannot be Empty");
+            mViewInstance.onEmailError(AuthEmailError.ERROR_EMPTY_MESSAGE);
             mViewInstance.onProcessEnded();
             return false;
         } else if (!TextUtils.isEmailValid(email)) {
-            mViewInstance.onEmailError("This is not a Valid Email Address");
+            mViewInstance.onEmailError(AuthEmailError.ERROR_INVALID_MESSAGE);
             mViewInstance.onProcessEnded();
             return false;
         } else if (TextUtils.isEmpty(password)) {
-            mViewInstance.onPasswordError("Please enter a password");
+            mViewInstance.onPasswordError(AuthPasswordError.ERROR_EMPTY_MESSAGE);
             mViewInstance.onProcessEnded();
             return false;
         } else if (!TextUtils.isPasswordStrong(password)) {
-            mViewInstance.onPasswordError("Kindly enter a strong password");
+            mViewInstance.onPasswordError(AuthPasswordError.ERROR_INVALID_MESSAGE);
             mViewInstance.onProcessEnded();
             return false;
         } else
@@ -112,10 +112,10 @@ public class SignInPresenterImpl implements SignInPresenter {
             //get These fields from the mViewInstance
             String email = mViewInstance.getEmailField();
             if (TextUtils.isEmpty(email)) {
-                mViewInstance.onEmailError("Email Address Cannot be Empty");
+                mViewInstance.onEmailError(AuthEmailError.ERROR_EMPTY_MESSAGE);
                 mViewInstance.onProcessEnded();
             } else if (!TextUtils.isEmailValid(email)) {
-                mViewInstance.onEmailError("This is not a Valid Email Address");
+                mViewInstance.onEmailError(AuthEmailError.ERROR_INVALID_MESSAGE);
                 mViewInstance.onProcessEnded();
             } else
                 mDisposable = mRepository.resetPasswordLinkedToEmail(email)
