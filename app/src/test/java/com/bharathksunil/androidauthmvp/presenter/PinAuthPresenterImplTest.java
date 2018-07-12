@@ -1,5 +1,7 @@
 package com.bharathksunil.androidauthmvp.presenter;
 
+import android.support.annotation.NonNull;
+
 import com.bharathksunil.androidauthmvp.FormErrorType;
 import com.bharathksunil.androidauthmvp.exception.AuthPinError;
 import com.bharathksunil.androidauthmvp.model.UserPin;
@@ -13,8 +15,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import java.util.concurrent.ThreadFactory;
+
 import io.reactivex.Single;
 import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.mockito.Mockito.times;
@@ -33,12 +38,14 @@ public class PinAuthPresenterImplTest {
 
     @BeforeClass
     public static void setupClass() {
-        RxAndroidPlugins.setInitMainThreadSchedulerHandler(__ -> Schedulers.trampoline());
+        RxJavaPlugins.setIoSchedulerHandler(handler -> Schedulers.trampoline());
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(handler -> Schedulers.trampoline());
     }
 
     @AfterClass
     public static void tearDownClass() {
         RxAndroidPlugins.reset();
+        RxJavaPlugins.reset();
     }
 
     @Test

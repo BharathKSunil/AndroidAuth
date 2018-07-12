@@ -20,6 +20,7 @@ import java.util.Random;
 
 import io.reactivex.Single;
 import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.bharathksunil.androidauthmvp.presenter.SignInPresenter.Repository;
@@ -44,13 +45,14 @@ public class SignInPresenterImplTest {
 
     @BeforeClass
     public static void setupClass() {
-        RxAndroidPlugins.setInitMainThreadSchedulerHandler(
-                __ -> Schedulers.trampoline());
+        RxJavaPlugins.setIoSchedulerHandler(handler -> Schedulers.trampoline());
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(handler -> Schedulers.trampoline());
     }
 
     @AfterClass
     public static void tearDownClass() {
         RxAndroidPlugins.reset();
+        RxJavaPlugins.reset();
     }
 
     private String[] invalidEmails = new String[]{
