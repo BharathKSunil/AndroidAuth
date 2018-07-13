@@ -14,13 +14,12 @@ import io.reactivex.disposables.Disposable;
 import static io.reactivex.schedulers.Schedulers.io;
 
 /**
- * The SignInPresenter implementation to perform signIn
+ * The {@link SignInPresenter} implementation to perform signIn.
  * A presenter interacts with both the UI and the mRepository
  * this is independent of the way the UI or the Repositories are implemented
  *
- * @author Bharath on 26-01-2018.
+ * @author BharathKSunil on 26-01-2018.
  */
-
 public class SignInPresenterImpl implements SignInPresenter {
 
     @Nullable
@@ -28,7 +27,6 @@ public class SignInPresenterImpl implements SignInPresenter {
     @NonNull
     private SignInPresenter.Repository mRepository;
     private Disposable mDisposable;
-
 
     public SignInPresenterImpl(@NonNull Repository repository) {
         this.mRepository = repository;
@@ -51,6 +49,7 @@ public class SignInPresenterImpl implements SignInPresenter {
         String password = mViewInstance.getPasswordField();
         if (!validateField(email, password))
             return;
+
         mDisposable = mRepository.signInWithEmailAndPassword(email, password)
                 .subscribeOn(io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -111,6 +110,7 @@ public class SignInPresenterImpl implements SignInPresenter {
             mViewInstance.onProcessStarted();
             //get These fields from the mViewInstance
             String email = mViewInstance.getEmailField();
+
             if (TextUtils.isEmpty(email)) {
                 mViewInstance.onEmailError(AuthEmailError.ERROR_EMPTY_MESSAGE);
                 mViewInstance.onProcessEnded();

@@ -17,13 +17,13 @@ import io.reactivex.Single;
 /**
  * This implements the {@link SignInPresenter.Repository} and performs the sign with firebase as the backend
  *
- * @author Bharath on 26-01-2018.
+ * @author BharathKSunil
  */
-
 public class FirebaseSignInRepositoryImpl implements SignInPresenter.Repository {
 
     @Override
     public Single<String> signInWithEmailAndPassword(@NonNull final String email, @NonNull final String password) {
+        //check if the user is already signed in
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             return Single.error(new AuthAlreadySignedInError());
         }

@@ -15,9 +15,8 @@ import io.reactivex.Single;
 /**
  * This implements the SignInRepository and performs the sign with SharedPreferences as the backend
  *
- * @author Bharath on 27-01-2018.
+ * @author BharathKSunil on 27-01-2018.
  */
-
 public class SharedPreferencesSignInRepositoryImpl implements SignInPresenter.Repository {
 
     /**

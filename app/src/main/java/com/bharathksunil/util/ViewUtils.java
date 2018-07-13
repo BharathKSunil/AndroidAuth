@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -170,6 +172,17 @@ public class ViewUtils {
         if (addToBackStack)
             transaction.addToBackStack(tag);
         transaction.commit();
+    }
+
+    public static void vibrate(@NonNull Activity activity, long milliseconds) {
+        Vibrator vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(milliseconds, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                vibrator.vibrate(milliseconds);
+            }
+        }
     }
 
     public static AlertDialog createSimpleAlertDialog(@NonNull Context context,

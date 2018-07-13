@@ -11,6 +11,12 @@ import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenter;
 
 import io.reactivex.Single;
 
+/**
+ * This is the implementation of the {@link PinAuthPresenter.Repository} and this stores the pin
+ * in the local SQLite Database. It is implemented with the help of room.
+ *
+ * @author BharathKSunil
+ */
 public class LocalPinAuthRepositoryImpl implements PinAuthPresenter.Repository {
     private UserPinDatabase mDBInstance;
 

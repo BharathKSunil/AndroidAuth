@@ -4,6 +4,9 @@ import android.support.annotation.NonNull;
 
 import com.bharathksunil.androidauthmvp.FormErrorType;
 
+/**
+ * This Throwable is thrown when there is an error with the Password field
+ */
 public class AuthPasswordError extends Throwable {
     public static final String ERROR_INVALID_MESSAGE = "Invalid Password, Check if password matches minimum strength";
     public static final String ERROR_INCORRECT_MESSAGE = "Incorrect Password, Kindly Retry";

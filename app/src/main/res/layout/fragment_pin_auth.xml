@@ -6,8 +6,10 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/white"
-    tools:context=".view.fragments.PinAuthFragment">
+    tools:context=".view.fragments.PinAuthFragment"
+    tools:theme="@style/Auth">
 
+    <!-- Background-->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp" />
-
     <!--Progress bar-->
     <include
         layout="@layout/layout_loading_view"
@@ -31,7 +32,6 @@
         android:layout_above="@+id/ll_circles"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp" />
-
     <!--Pin Circles-->
     <LinearLayout
         android:id="@+id/ll_circles"
@@ -74,7 +74,6 @@
             android:contentDescription="@string/cd_pin"
             android:src="@drawable/pin_background_normal" />
     </LinearLayout>
-
     <!--Number Layout-->
     <GridLayout
         android:id="@+id/grid_pin"

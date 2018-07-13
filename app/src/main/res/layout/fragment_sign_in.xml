@@ -6,20 +6,30 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_cut_blue"
     android:padding="16dp"
-    tools:context=".view.fragments.SignInFragment">
+    tools:context=".view.fragments.SignInFragment"
+    tools:theme="@style/Auth">
 
+    <!--Logo Layout-->
     <include
         android:id="@+id/layout_logo"
         layout="@layout/layout_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
+    <!--Loading Indicator Layout-->
+    <include
+        android:id="@+id/layout_loading_view"
+        layout="@layout/layout_loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_logo"
+        android:layout_marginTop="25dp" />
+    <!--Email ID-->
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_email"
         style="@style/Auth.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_logo"
+        android:layout_below="@+id/layout_loading_view"
         android:layout_marginTop="8dp"
         android:theme="@style/Auth.TextInputLayout">
 
@@ -30,7 +40,7 @@
             android:inputType="textEmailAddress"
             android:textColor="@color/white" />
     </android.support.design.widget.TextInputLayout>
-
+    <!--Password-->
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_password"
         style="@style/Auth.TextInputLayout"
@@ -49,7 +59,7 @@
             android:inputType="textWebPassword"
             android:textColor="@color/white" />
     </android.support.design.widget.TextInputLayout>
-
+    <!--Forgotten Password-->
     <TextView
         android:id="@+id/tv_reset_password"
         android:layout_width="wrap_content"
@@ -61,7 +71,7 @@
         android:text="@string/tv_forgot_password"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
         android:textColor="@color/white" />
-
+    <!--SignIn Button-->
     <Button
         android:id="@+id/btn_submit"
         style="@style/Auth.ButtonNormal"
@@ -71,24 +81,17 @@
         android:layout_marginTop="16dp"
         android:text="@string/btn_sign_in"
         android:theme="@style/Auth.ButtonNormal" />
-
-    <TextView
-        android:id="@+id/tv_sign_up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_submit"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
-        android:text="@string/tv_please_register"
-        android:textColor="@color/white"/>
-
-    <include
-        layout="@layout/layout_loading_view"
+    <!--SignUp button-->
+    <Button
+        android:id="@+id/btn_sign_up"
+        style="@style/Auth.ButtonInverse"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_sign_up"
-        android:layout_marginTop="25dp" />
-
+        android:layout_below="@+id/btn_submit"
+        android:layout_marginTop="4dp"
+        android:text="@string/btn_sign_up"
+        android:theme="@style/Auth.ButtonInverse" />
+    <!--Terms and Privacy-->
     <TextView
         android:id="@+id/tv_terms_and_privacy_policy"
         android:layout_width="wrap_content"

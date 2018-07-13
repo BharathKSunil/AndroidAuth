@@ -4,6 +4,9 @@ import android.support.annotation.NonNull;
 
 import com.bharathksunil.androidauthmvp.FormErrorType;
 
+/**
+ * This Throwable is thrown when the Pin Field has an error
+ */
 public class AuthPinError extends Throwable {
     public static final String ERROR_INVALID_MESSAGE = "Invalid Pin, Check if Pin has a minimum length of 4";
     public static final String ERROR_INCORRECT_MESSAGE = "Incorrect Pin, Kindly Retry";

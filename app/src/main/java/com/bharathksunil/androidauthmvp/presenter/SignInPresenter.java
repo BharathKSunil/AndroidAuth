@@ -11,9 +11,8 @@ import io.reactivex.Single;
  * This presenter interface is to be used for signing-in to the app
  * the view must implement the {@link View}
  *
- * @author Bharath on 26-01-2018.
+ * @author BharathKSunil on 26-01-2018.
  */
-
 public interface SignInPresenter {
 
     /**
@@ -84,7 +83,7 @@ public interface SignInPresenter {
      * this abstracts the backend to the presenter and offers backend independence.
      * You may implement the backend in any fashion you like: REST, Firebase, SQLite etc..
      *
-     * @author Bharath on 26-01-2018.
+     * @author BharathKSunil on 26-01-2018.
      */
     interface Repository {
         /**
