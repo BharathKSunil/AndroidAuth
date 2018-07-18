@@ -12,7 +12,8 @@ import com.bharathksunil.androidauthmvp.repository.LocalPinAuthRepositoryImpl;
 import com.bharathksunil.androidauthmvp.view.fragments.PinAuthFragment;
 import com.bharathksunil.androidauthmvp.view.fragments.SignInFragment;
 import com.bharathksunil.util.Debug;
-import com.bharathksunil.util.ViewUtils;
+import com.bharathksunil.util.FragmentTransactionUtils;
+import com.bharathksunil.util.SnackBarUtils;
 
 public class AuthActivity extends AppCompatActivity implements SignInFragment.OnFragmentInteractionListener,
         PinAuthFragment.OnFragmentInteractionListener {
@@ -32,7 +33,7 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
                 R.string.app_name
         );
         signInFragment.usePresenter(new SignInPresenterImpl(new FirebaseSignInRepositoryImpl()));
-        ViewUtils.loadFragment(
+        FragmentTransactionUtils.loadFragment(
                 this,
                 signInFragment,
                 R.id.frame_primary,
@@ -48,7 +49,7 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
 
     @Override
     public void userSignInCancelledOrFailed(@NonNull final String errorMessage) {
-        ViewUtils.errorBar(this, errorMessage);
+        SnackBarUtils.showErrorBar(this, errorMessage);
         Debug.i("Sign in Failed or Cancelled");
     }
 
@@ -64,7 +65,7 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
 
     @Override
     public void loadTermsAndPrivacyPolicyScreen() {
-        ViewUtils.snackBar(this, "Will be implemented Soon");
+        SnackBarUtils.showLongSnackBar(this, "Will be implemented Soon");
 
     }
     //endregion
@@ -83,7 +84,7 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
                 )
         );
 
-        ViewUtils.loadFragment(
+        FragmentTransactionUtils.loadFragment(
                 this,
                 pinAuthFragment,
                 R.id.frame_primary,
@@ -94,13 +95,13 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
 
     @Override
     public void pinAuthenticated() {
-        ViewUtils.snackBar(this, "Pin Authenticated Successfully");
+        SnackBarUtils.showLongSnackBar(this, "Pin Authenticated Successfully");
         loadSignInFragment();
     }
 
     @Override
     public void pinAuthenticationFailed(@NonNull String errorMessage) {
-        ViewUtils.snackBar(this, errorMessage);
+        SnackBarUtils.showErrorBar(this, errorMessage);
     }
 
     //endregion

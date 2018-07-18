@@ -20,22 +20,24 @@ public class UserPin {
     }
 
     //region Getters
+    @NonNull
     public String getUid() {
         return uid;
     }
 
-    //region Setters
-    public void setUid(String uid) {
-        this.uid = uid;
+    public String getPin() {
+        return pin;
     }
     //endregion
 
-    public String getPin() {
-        return pin;
+    //region Setters
+    public void setUid(@NonNull String uid) {
+        this.uid = uid;
     }
 
     public void setPin(String pin) {
         this.pin = pin;
     }
+
     //endregion
 }

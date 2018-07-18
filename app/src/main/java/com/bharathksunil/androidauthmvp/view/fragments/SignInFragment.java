@@ -17,6 +17,7 @@ import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenter;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenterImpl;
 import com.bharathksunil.androidauthmvp.repository.FirebaseSignInRepositoryImpl;
+import com.bharathksunil.util.SnackBarUtils;
 import com.bharathksunil.util.ViewUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -252,7 +253,7 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
 
     @Override
     public void onPasswordResetMailSent() {
-        ViewUtils.snackBar(requireActivity(), snackPasswordResetMailSent);
+        SnackBarUtils.showLongSnackBar(requireActivity(), snackPasswordResetMailSent);
     }
 
     @Override

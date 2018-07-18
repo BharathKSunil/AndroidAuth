@@ -18,6 +18,7 @@ import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenter;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenterImpl;
 import com.bharathksunil.androidauthmvp.repository.LocalPinAuthRepositoryImpl;
+import com.bharathksunil.util.SnackBarUtils;
 import com.bharathksunil.util.ViewUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -211,7 +212,7 @@ public class PinAuthFragment extends Fragment implements PinAuthPresenter.View {
     @Override
     public void onAuthPinFieldError(@NonNull String errorMessage) {
         vibrate(requireActivity(), 300);
-        ViewUtils.errorBar(requireActivity(), errorMessage);
+        SnackBarUtils.showErrorBar(requireActivity(), errorMessage);
     }
 
     @Override
