@@ -17,8 +17,8 @@ import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenter;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenterImpl;
 import com.bharathksunil.androidauthmvp.repository.FirebaseSignInRepositoryImpl;
-import com.bharathksunil.util.SnackBarUtils;
-import com.bharathksunil.util.ViewUtils;
+import com.bharathksunil.utils.SnackBarUtils;
+import com.bharathksunil.utils.ViewUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;

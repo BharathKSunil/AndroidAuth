@@ -1,4 +1,4 @@
-package com.bharathksunil.util;
+package com.bharathksunil.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Bharath on 24-02-2018.
  */
-
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class DateUtil {
     private static final String DATE_PATTERN = "hh:mm:ss a, dd MMMM yyyy";
 

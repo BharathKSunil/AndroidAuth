@@ -1,4 +1,4 @@
-package com.bharathksunil.util;
+package com.bharathksunil.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,15 +9,19 @@ import java.util.regex.Pattern;
 /**
  * @author Bharath on 10-01-2018.
  */
-
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class TextUtils {
 
-    private static final String mustHaveDigit = "(?=.*[0-9])",
-            mustHaveLowerCaseAlpha = "(?=.*[0-9])",
-            mustHaveUpperCaseAlpha = "(?=.*[a-z])",
-            mustHaveSpecialChar = "(?=.*[@#$%^&+=])",
-            mustNotHaveWhiteSpaces = "(?=\\S+$)",
-            mustHaveMinimal8Char = ".{8,}";
+    private TextUtils() {
+    }
+
+    private static final String MUST_HAVE_DIGIT = "(?=.*[0-9])";
+    private static final String MUST_HAVE_LOWER_CASE_ALPHA = "(?=.*[0-9])";
+    private static final String MUST_HAVE_UPPER_CASE_ALPHA = "(?=.*[a-z])";
+    private static final String MUST_HAVE_SPECIAL_CHAR = "(?=.*[@#$%^&+=])";
+    private static final String MUST_NOT_HAVE_WHITE_SPACES = "(?=\\S+$)";
+    private static final String MUST_HAVE_MINIMAL_8_CHAR = ".{8,}";
+
     /**
      * Password validation Regular expression, modules:
      * ^                 # start-of-string
@@ -31,10 +35,10 @@ public class TextUtils {
      */
     private static final Pattern VALID_PASSWORD_REGEX = Pattern.compile(
             "^"
-                    + mustHaveDigit
-                    + mustHaveLowerCaseAlpha
-                    + mustNotHaveWhiteSpaces
-                    + mustHaveMinimal8Char
+                    + MUST_HAVE_DIGIT
+                    + MUST_HAVE_LOWER_CASE_ALPHA
+                    + MUST_NOT_HAVE_WHITE_SPACES
+                    + MUST_HAVE_MINIMAL_8_CHAR
                     + "$"
     );
 
@@ -50,7 +54,7 @@ public class TextUtils {
     /**
      * Email Id Validation Regular Expression to validate an email ID
      */
-    private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+    private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", Pattern.CASE_INSENSITIVE);
 
     private static final String DATE_PATTERN = "dd/MM/yyyy";
@@ -76,8 +80,8 @@ public class TextUtils {
      * @return true, if the phone number is valid
      */
     public static boolean isPhoneNumberValid(CharSequence phone) {
-        Matcher phone_matcher = VALID_PHONE_NUMBER_REGEX.matcher(phone);
-        return phone_matcher.find();
+        Matcher phoneMatcher = VALID_PHONE_NUMBER_REGEX.matcher(phone);
+        return phoneMatcher.find();
     }
 
     /**

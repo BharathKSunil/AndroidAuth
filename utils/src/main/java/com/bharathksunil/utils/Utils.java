@@ -1,4 +1,4 @@
-package com.bharathksunil.util;
+package com.bharathksunil.utils;
 
 import android.app.Activity;
 import android.content.Context;

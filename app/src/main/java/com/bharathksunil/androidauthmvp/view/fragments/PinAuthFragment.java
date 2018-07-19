@@ -18,8 +18,8 @@ import com.bharathksunil.androidauthmvp.R;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenter;
 import com.bharathksunil.androidauthmvp.presenter.PinAuthPresenterImpl;
 import com.bharathksunil.androidauthmvp.repository.LocalPinAuthRepositoryImpl;
-import com.bharathksunil.util.SnackBarUtils;
-import com.bharathksunil.util.ViewUtils;
+import com.bharathksunil.utils.SnackBarUtils;
+import com.bharathksunil.utils.ViewUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayDeque;
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.bharathksunil.util.ViewUtils.vibrate;
+import static com.bharathksunil.utils.ViewUtils.vibrate;
 
 /**
  * A simple {@link Fragment} subclass to perform the Pin Authentication and implements the

@@ -1,4 +1,4 @@
-package com.bharathksunil.util;
+package com.bharathksunil.utils;
 
 import android.app.ActionBar;
 import android.content.Context;
@@ -207,7 +207,8 @@ public class ViewUtils {
     }
 
     /**
-     * Use these methods to vibrate the device.
+     * Use these methods to vibrate the device.<br/>
+     * <b>Note: </b> add the permission
      *
      * @param context      the context.
      * @param milliseconds the time the vibration must continue.

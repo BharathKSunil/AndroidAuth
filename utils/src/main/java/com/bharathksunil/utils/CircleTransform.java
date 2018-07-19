@@ -1,4 +1,4 @@
-package com.bharathksunil.util;
+package com.bharathksunil.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -7,6 +7,7 @@ import android.graphics.Paint;
 
 import com.squareup.picasso.Transformation;
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class CircleTransform implements Transformation {
     @Override
     public Bitmap transform(Bitmap source) {

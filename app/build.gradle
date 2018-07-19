@@ -31,8 +31,7 @@ dependencies {
     def GoogleSupportVersion = '27.1.0'
     def FirebaseVersion = '16.0.1'
     def room_version = "1.1.1"
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     //google-Android libraries
     implementation "com.android.support:design:$GoogleSupportVersion"
     implementation "com.android.support:appcompat-v7:$GoogleSupportVersion"
@@ -42,8 +41,8 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$room_version"
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
     //google-Firebase libraries
-    implementation "com.google.firebase:firebase-core:16.0.0"
-    releaseImplementation "com.google.firebase:firebase-crash:16.0.0"
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+    releaseImplementation 'com.google.firebase:firebase-crash:16.0.0'
     implementation "com.google.firebase:firebase-database:$FirebaseVersion"
     implementation "com.google.firebase:firebase-storage:$FirebaseVersion"
     implementation "com.google.firebase:firebase-auth:$FirebaseVersion"
@@ -57,7 +56,9 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     //testingLibraries
     testImplementation 'junit:junit:4.12'
-    testImplementation "org.mockito:mockito-core:2.7.22"
+    testImplementation 'org.mockito:mockito-core:2.7.22'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    //module dependency
+    implementation project(':utils')
 }

@@ -11,9 +11,9 @@ import com.bharathksunil.androidauthmvp.repository.FirebaseSignInRepositoryImpl;
 import com.bharathksunil.androidauthmvp.repository.LocalPinAuthRepositoryImpl;
 import com.bharathksunil.androidauthmvp.view.fragments.PinAuthFragment;
 import com.bharathksunil.androidauthmvp.view.fragments.SignInFragment;
-import com.bharathksunil.util.Debug;
-import com.bharathksunil.util.FragmentTransactionUtils;
-import com.bharathksunil.util.SnackBarUtils;
+import com.bharathksunil.utils.Debug;
+import com.bharathksunil.utils.FragmentTransactionUtils;
+import com.bharathksunil.utils.SnackBarUtils;
 
 public class AuthActivity extends AppCompatActivity implements SignInFragment.OnFragmentInteractionListener,
         PinAuthFragment.OnFragmentInteractionListener {

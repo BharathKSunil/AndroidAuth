@@ -1,7 +1,9 @@
-package com.bharathksunil.util;
+package com.bharathksunil.utils;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -10,18 +12,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bharathksunil.androidauthmvp.R;
-
 
 /**
  * This Utility has methods related to snackBars, creating appTheme specific SnackBar, error SnackBar<br/>
- * <b>Note: </b> The activity on which this is invoked must have a root view with id=rootView;
+ * <b>Note: </b> The accent Color must be set by the user in the Application Class by calling the
+ * {@link #initialise(int)} method
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public final class SnackBarUtils {
 
+    private static int accentColor = R.color.snackbar_default_accent;
+
     private SnackBarUtils() {
         //do not let anyone create an instance of this class
+    }
+
+    public static void initialise(@ColorRes @ColorInt int accentColor) {
+        SnackBarUtils.accentColor = accentColor;
     }
 
     /**
@@ -75,7 +82,7 @@ public final class SnackBarUtils {
                         .getChildAt(0),//gets the root view of the activity
                 message,
                 Snackbar.LENGTH_LONG,
-                ContextCompat.getColor(activity, R.color.accent),
+                ContextCompat.getColor(activity, accentColor),
                 Color.WHITE
         );
     }
@@ -102,7 +109,7 @@ public final class SnackBarUtils {
                         .getChildAt(0),//gets the root view of teh activity
                 message,
                 Snackbar.LENGTH_SHORT,
-                ContextCompat.getColor(activity, R.color.accent),
+                ContextCompat.getColor(activity, accentColor),
                 Color.WHITE
         );
     }

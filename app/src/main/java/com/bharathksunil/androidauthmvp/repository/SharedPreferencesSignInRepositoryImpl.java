@@ -8,7 +8,7 @@ import com.bharathksunil.androidauthmvp.exception.AuthAlreadySignedInError;
 import com.bharathksunil.androidauthmvp.exception.AuthEmailError;
 import com.bharathksunil.androidauthmvp.exception.AuthPasswordError;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenter;
-import com.bharathksunil.util.TextUtils;
+import com.bharathksunil.utils.TextUtils;
 
 import io.reactivex.Single;
 
@@ -17,6 +17,7 @@ import io.reactivex.Single;
  *
  * @author BharathKSunil on 27-01-2018.
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class SharedPreferencesSignInRepositoryImpl implements SignInPresenter.Repository {
 
     /**
