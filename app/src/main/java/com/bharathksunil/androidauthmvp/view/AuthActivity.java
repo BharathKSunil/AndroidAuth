@@ -33,12 +33,13 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
                 R.string.app_name
         );
         signInFragment.usePresenter(new SignInPresenterImpl(new FirebaseSignInRepositoryImpl()));
-        FragmentTransactionUtils.loadFragment(
-                this,
+        FragmentTransactionUtils.replaceFragment(
+                getSupportFragmentManager(),
                 signInFragment,
                 R.id.frame_primary,
                 SignInFragment.class.getSimpleName(),
-                false
+                false,
+                FragmentTransactionUtils.TransitionAnimation.SLIDING_IN_LEFT
         );
     }
 
@@ -84,12 +85,14 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
                 )
         );
 
-        FragmentTransactionUtils.loadFragment(
-                this,
+        FragmentTransactionUtils.replaceFragment(
+                getSupportFragmentManager(),
                 pinAuthFragment,
                 R.id.frame_primary,
                 PinAuthFragment.class.getSimpleName(),
-                false
+                false,
+                FragmentTransactionUtils.TransitionAnimation.FADING
+
         );
     }
 

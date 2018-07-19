@@ -1,20 +1,15 @@
 package com.bharathksunil.util;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -34,6 +29,7 @@ public class ViewUtils {
     private ViewUtils() {
         //so that no instance is made
     }
+
 
     /**
      * Call this method to focus on any view inside the scrollView
@@ -69,7 +65,7 @@ public class ViewUtils {
      *
      * @param window the window corresponding to the activity that must be made as a popup.
      */
-    public static void makePopupDisplay(@NonNull Window window, float transparencyPercentage) {
+    public static void makePopupDisplay(@NonNull final Window window, float transparencyPercentage) {
         if (transparencyPercentage < 10.00f || transparencyPercentage > 100.00f)
             //Aggressive programming. notify the Developer that the value passed is invalid
             throw new IllegalArgumentException("The transparency amount passed must be between" +
@@ -85,6 +81,8 @@ public class ViewUtils {
             Debug.e("Utils.makePopupDisplay(): " + e.getMessage());
         }
     }
+
+    //region View Visibility Related Methods (Visible, Invisible, Gone)
 
     /**
      * Call this function to set the views as visible
@@ -144,6 +142,9 @@ public class ViewUtils {
     public static void setGone(List<View> views) {
         for (View v : views) setGone(v);
     }
+    //endregion
+
+    //region View State Related Methods (Enabled, Disabled)
 
     /**
      * Call this function to enable the views
@@ -182,6 +183,7 @@ public class ViewUtils {
     public static void setDisabled(List<View> views) {
         for (View v : views) setDisabled(v);
     }
+    //endregion
 
     /**
      * Call this function to reset the errors in the {@link TextInputLayout}
@@ -189,10 +191,8 @@ public class ViewUtils {
      * @param textInputLayouts the textInputLayout
      */
     public static void resetTextInputError(TextInputLayout... textInputLayouts) {
-        for (TextInputLayout textInputLayout : textInputLayouts) {
-            textInputLayout.setErrorEnabled(false);
-            textInputLayout.setErrorEnabled(true);
-        }
+        for (TextInputLayout textInputLayout : textInputLayouts)
+            textInputLayout.setError(null);
     }
 
     /**
@@ -209,11 +209,11 @@ public class ViewUtils {
     /**
      * Use these methods to vibrate the device.
      *
-     * @param activity     the activity instance.
+     * @param context      the context.
      * @param milliseconds the time the vibration must continue.
      */
-    public static void vibrate(@NonNull Activity activity, long milliseconds) {
-        Vibrator vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+    public static void vibrate(@NonNull Context context, long milliseconds) {
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createOneShot(milliseconds, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -250,6 +250,8 @@ public class ViewUtils {
         builder.setCancelable(true);
         return builder.create();
     }
+
+    //region View Animation Methods
 
     /**
      * To animate view slide out from left to right
@@ -362,4 +364,5 @@ public class ViewUtils {
         });
         view.startAnimation(animate);
     }
+    //endregion
 }

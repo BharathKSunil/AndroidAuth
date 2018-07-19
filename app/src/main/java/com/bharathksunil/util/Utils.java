@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.view.inputmethod.InputMethodManager;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
@@ -42,8 +43,21 @@ public class Utils {
                 == PackageManager.PERMISSION_GRANTED;
     }
 
-    /*public static boolean isHighAccuracyLocationEnabled(@NonNull Context context) {
-        int locationMode;
+    /**
+     * this function is used for hide keyboard panel.
+     *
+     * @param activity - activity instance
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static void hideKeyboard(Activity activity) {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        } catch (Exception e) {
+            Debug.e("Utils.hideKeyboard" + e.getMessage());
+        }
+    }
+    /*public static boolean isHighAccuracyLocationEnabled(@NonNull Context context) { int locationMode;
         String locationProviders;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
