@@ -34,6 +34,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Bharath on 26-01-2018.
  */
+@SuppressWarnings({"unused", "WeakerAccess", "FieldCanBeLocal"})
 public class SignInPresenterImplTest {
 
     private final String CORRECT_EMAIL = "bharathk.sunil.k@gmail.com";
@@ -284,9 +285,7 @@ public class SignInPresenterImplTest {
             @Override
             public Single<String> resetPasswordLinkedToEmail(@NonNull String email) {
                 return Single.create(
-                        emitter -> {
-                            emitter.onError(new AuthEmailError(FormErrorType.EMPTY));
-                        }
+                        emitter -> emitter.onError(new AuthEmailError(FormErrorType.EMPTY))
                 );
             }
         };
@@ -394,9 +393,7 @@ public class SignInPresenterImplTest {
             @Override
             public Single<String> signInWithEmailAndPassword(@NonNull String email, @NonNull String password) {
                 return Single.create(
-                        emitter -> {
-                            emitter.onError(new Throwable("Something Horrible Occurred"));
-                        }
+                        emitter -> emitter.onError(new Throwable("Something Horrible Occurred"))
                 );
             }
 
@@ -427,9 +424,7 @@ public class SignInPresenterImplTest {
             @Override
             public Single<String> signInWithEmailAndPassword(@NonNull String email, @NonNull String password) {
                 return Single.create(
-                        emitter -> {
-                            emitter.onError(new AuthAlreadySignedInError());
-                        }
+                        emitter -> emitter.onError(new AuthAlreadySignedInError())
                 );
             }
 

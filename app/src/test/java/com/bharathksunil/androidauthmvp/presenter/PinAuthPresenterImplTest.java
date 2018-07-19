@@ -1,7 +1,5 @@
 package com.bharathksunil.androidauthmvp.presenter;
 
-import android.support.annotation.NonNull;
-
 import com.bharathksunil.androidauthmvp.FormErrorType;
 import com.bharathksunil.androidauthmvp.exception.AuthPinError;
 import com.bharathksunil.androidauthmvp.model.UserPin;
@@ -14,8 +12,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
-import java.util.concurrent.ThreadFactory;
 
 import io.reactivex.Single;
 import io.reactivex.android.plugins.RxAndroidPlugins;
@@ -144,9 +140,7 @@ public class PinAuthPresenterImplTest {
     @Test
     public void onRepositoryError() {
         PinAuthPresenter.Repository repository = pin -> Single.create(
-                emitter -> {
-                    emitter.onError(new Throwable("Repository Error"));
-                }
+                emitter -> emitter.onError(new Throwable("Repository Error"))
         );
         PinAuthPresenter presenter = new PinAuthPresenterImpl(repository);
         presenter.setView(view);
