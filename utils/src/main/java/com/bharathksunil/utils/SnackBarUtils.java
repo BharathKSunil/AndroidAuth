@@ -16,19 +16,28 @@ import android.widget.TextView;
 /**
  * This Utility has methods related to snackBars, creating appTheme specific SnackBar, error SnackBar<br/>
  * <b>Note: </b> The accent Color must be set by the user in the Application Class by calling the
- * {@link #initialise(int)} method
+ * {@link #initialise(int, int)} method
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public final class SnackBarUtils {
 
-    private static int accentColor = R.color.snackbar_default_accent;
+    private static int accentColorResource = R.color.snackbar_default_accent;
+    private static int textColorResource = android.R.color.white;
 
     private SnackBarUtils() {
         //do not let anyone create an instance of this class
     }
 
-    public static void initialise(@ColorRes @ColorInt int accentColor) {
-        SnackBarUtils.accentColor = accentColor;
+    /**
+     * Call this method in the onCreate() method of the Application class of your app to pass in the
+     * accent color of the app so that the SnackBars can be matching to those colors
+     *
+     * @param accentColorResource the accent color or the desired color for the SnackBar
+     */
+    public static void initialise(@ColorRes int accentColorResource,
+                                  @ColorRes int textColorResource) {
+        SnackBarUtils.accentColorResource = accentColorResource;
+        SnackBarUtils.textColorResource = textColorResource;
     }
 
     /**
@@ -42,8 +51,11 @@ public final class SnackBarUtils {
      * @param backgroundColor the color of the background
      * @param textColor       the color of the text
      */
-    public static void showCustomisedSnackBar(@NonNull View rootView, @NonNull final String message,
-                                              int duration, int backgroundColor, int textColor) {
+    public static void showCustomisedSnackBar(@NonNull View rootView,
+                                              @NonNull final String message,
+                                              int duration,
+                                              @ColorInt int backgroundColor,
+                                              @ColorInt int textColor) {
         Snackbar snackbar = Snackbar.make(rootView, message, duration);
         snackbar.getView().setBackgroundColor(backgroundColor);
         TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
@@ -59,7 +71,8 @@ public final class SnackBarUtils {
      * @param message  the message that must be displayed
      * @param duration the duration of the message in milliseconds or use SnackBar.LENGTH_XXXX
      */
-    public static void showSimpleSnackBar(@NonNull View rootView, @NonNull final String message,
+    public static void showSimpleSnackBar(@NonNull View rootView,
+                                          @NonNull final String message,
                                           int duration) {
         showCustomisedSnackBar(
                 rootView,
@@ -70,20 +83,68 @@ public final class SnackBarUtils {
         );
     }
 
+    //region Long SnackBar Methods
+
     /**
-     * This function makes apps accent colored SnackBar for displaying messages for Long interval
+     * This function makes {@link #accentColorResource} colored SnackBar for displaying messages for
+     * Long interval and the text color will be {@link #textColorResource}
      *
      * @param activity the activity on which the snack must be shown
      * @param message  the message to be shown
      */
-    public static void showLongSnackBar(@NonNull final Activity activity, @NonNull final String message) {
+    public static void showLongSnackBar(@NonNull final Activity activity,
+                                        @NonNull final String message) {
         showCustomisedSnackBar(
                 ((ViewGroup) activity.findViewById(android.R.id.content))
                         .getChildAt(0),//gets the root view of the activity
                 message,
                 Snackbar.LENGTH_LONG,
-                ContextCompat.getColor(activity, accentColor),
-                Color.WHITE
+                ContextCompat.getColor(activity.getBaseContext(), accentColorResource),
+                ContextCompat.getColor(activity.getBaseContext(), textColorResource)
+        );
+    }
+
+    /**
+     * This function makes SnackBar for displaying messages for Long interval with the background color
+     * passed and the text color will be {@link #textColorResource}
+     *
+     * @param activity        the activity on which the snack must be shown
+     * @param message         the message to be shown
+     * @param backgroundColor the Color of the background
+     */
+    public static void showLongSnackBar(@NonNull final Activity activity,
+                                        @NonNull final String message,
+                                        @ColorInt int backgroundColor) {
+        showCustomisedSnackBar(
+                ((ViewGroup) activity.findViewById(android.R.id.content))
+                        .getChildAt(0),//gets the root view of the activity
+                message,
+                Snackbar.LENGTH_LONG,
+                backgroundColor,
+                ContextCompat.getColor(activity.getBaseContext(), textColorResource)
+        );
+    }
+
+    /**
+     * This function makes SnackBar for displaying messages for Long interval with the background color
+     * passed and the text color = textColor
+     *
+     * @param activity        the activity on which the snack must be shown
+     * @param message         the message to be shown
+     * @param backgroundColor the Color of the background
+     * @param textColor       the Color for the text
+     */
+    public static void showLongSnackBar(@NonNull final Activity activity,
+                                        @NonNull final String message,
+                                        @ColorInt int backgroundColor,
+                                        @ColorInt int textColor) {
+        showCustomisedSnackBar(
+                ((ViewGroup) activity.findViewById(android.R.id.content))
+                        .getChildAt(0),//gets the root view of the activity
+                message,
+                Snackbar.LENGTH_LONG,
+                backgroundColor,
+                textColor
         );
     }
 
@@ -93,9 +154,57 @@ public final class SnackBarUtils {
      * @param activity the activity on which the snack must be shown
      * @param message  the string resource of message to be shown
      */
-    public static void showLongSnackBar(@NonNull final Activity activity, @StringRes int message) {
+    public static void showLongSnackBar(@NonNull final Activity activity,
+                                        @StringRes int message) {
         showLongSnackBar(activity, activity.getString(message));
     }
+
+    /**
+     * This function makes SnackBar for displaying messages for Long interval with the background color
+     * passed and the text color will be {@link #textColorResource}
+     *
+     * @param activity        the activity on which the snack must be shown
+     * @param message         the message to be shown
+     * @param backgroundColor the Color of the background
+     */
+    public static void showLongSnackBar(@NonNull final Activity activity,
+                                        @StringRes int message,
+                                        @ColorInt int backgroundColor) {
+        showCustomisedSnackBar(
+                ((ViewGroup) activity.findViewById(android.R.id.content))
+                        .getChildAt(0),//gets the root view of the activity
+                activity.getString(message),
+                Snackbar.LENGTH_LONG,
+                backgroundColor,
+                ContextCompat.getColor(activity.getBaseContext(), textColorResource)
+        );
+    }
+
+    /**
+     * This function makes SnackBar for displaying messages for Long interval with the background color
+     * passed and the text color = textColor
+     *
+     * @param activity        the activity on which the snack must be shown
+     * @param message         the message to be shown
+     * @param backgroundColor the Color of the background
+     * @param textColor       the Color for the text
+     */
+    public static void showLongSnackBar(@NonNull final Activity activity,
+                                        @StringRes int message,
+                                        @ColorInt int backgroundColor,
+                                        @ColorInt int textColor) {
+        showCustomisedSnackBar(
+                ((ViewGroup) activity.findViewById(android.R.id.content))
+                        .getChildAt(0),//gets the root view of the activity
+                activity.getString(message),
+                Snackbar.LENGTH_LONG,
+                backgroundColor,
+                textColor
+        );
+    }
+    //endregion
+
+    //region Short SnackBar Methods
 
     /**
      * TThis function makes apps accent colored SnackBar for displaying messages for short interval
@@ -109,7 +218,7 @@ public final class SnackBarUtils {
                         .getChildAt(0),//gets the root view of teh activity
                 message,
                 Snackbar.LENGTH_SHORT,
-                ContextCompat.getColor(activity, accentColor),
+                ContextCompat.getColor(activity, accentColorResource),
                 Color.WHITE
         );
     }
@@ -123,6 +232,9 @@ public final class SnackBarUtils {
     public static void showShortSnackBar(@NonNull final Activity activity, @StringRes int message) {
         showShortSnackBar(activity, activity.getString(message));
     }
+    //endregion
+
+    //region Error SnackBar Methods
 
     /**
      * This function makes a Red colored SnackBar for 4 seconds for displaying errors.
@@ -150,4 +262,5 @@ public final class SnackBarUtils {
     public static void showErrorBar(@NonNull final Activity activity, @StringRes int message) {
         showErrorBar(activity, activity.getString(message));
     }
+    //endregion
 }

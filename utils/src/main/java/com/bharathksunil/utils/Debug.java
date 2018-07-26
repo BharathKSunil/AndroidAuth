@@ -1,37 +1,70 @@
 package com.bharathksunil.utils;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 /**
- * <h>Debug</h>
- * THIS IS A HOUSE KEEPING CLASS WHICH HELPS IN SENDING LOG MESSAGES, TOASTS AND simple SNACK BAR
+ * This is a useful class that helps in simpler log calls
  *
  * @author Bharath Kumar S
  * @since 04-01-2017
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class Debug {
-    private Debug() {
+public final class Debug {
+    private final String className;
+    private static boolean isRelease;
 
+    public Debug(@NonNull final String className) {
+        this.className = className;
     }
 
     /**
-     * THIS METHOD PRINTS THE ERROR MESSAGE TO THE LOGGER
-     * FORMAT: Exception Occurred in:  <class_name>.<method_name> : error message
+     * Call this method to set if the log messages need to be printed in the release version.
+     * Call this in the onCreate() method of your Application Class.
      *
-     * @param message THIS GIVES THE CLASS_NAME.METHOD_NAME AT WHICH THE ERROR OCCURRED AND THE ERROR MESSAGE
+     * @param isRelease true if its a release build
      */
-    public static void e(String message) {
-        Log.e("BKS", "Exception Occurred in: " + message);
+    public static void setAsRelease(boolean isRelease) {
+        Debug.isRelease = isRelease;
     }
 
     /**
-     * THIS METHOD IS USED TO ANALISE THE EXECUTION, IT CAN BE USED TO PRINT VALUE OF ANY OBJECT AND IS HELP_FULL IN ANALYSING AND DEBUGGING
+     * To send an Error log messages
      *
-     * @param message THIS IS THE MESSAGE VIZ TO BE PRINTED
+     * @param message the message
      */
-    public static void i(String message) {
-        Log.i("BKS", message);
+    public void e(String message) {
+        Log.e(className, message);
+    }
+
+    /**
+     * To send an Information log message
+     *
+     * @param message the message
+     */
+    public void i(String message) {
+        if (!isRelease)
+            Log.i(className, message);
+    }
+
+    /**
+     * To send Debug log message
+     *
+     * @param message the message
+     */
+    public void d(String message) {
+        if (!isRelease)
+            Log.d(className, message);
+    }
+
+    /**
+     * To send Warning log messages
+     *
+     * @param message the message
+     */
+    public void w(String message) {
+        if (!isRelease)
+            Log.w(className, message);
     }
 
 

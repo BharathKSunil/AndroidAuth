@@ -8,7 +8,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 /**
+ * Use this Utility to load fragments.
  *
+ * @author Bharath
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public final class FragmentTransactionUtils {
@@ -249,9 +251,21 @@ public final class FragmentTransactionUtils {
     }
     //endregion
 
+    /**
+     * This contains the list of fragment transition animations that is supported
+     */
     public enum TransitionAnimation {
+        /**
+         * For the fragment to slide in from the left and exit to the right
+         */
         SLIDING_IN_LEFT,
+        /**
+         * For the fragment to slide in from the right and exit to the left
+         */
         SLIDING_IN_RIGHT,
+        /**
+         * For the fragment to fade in and exit by fading out
+         */
         FADING
     }
 }

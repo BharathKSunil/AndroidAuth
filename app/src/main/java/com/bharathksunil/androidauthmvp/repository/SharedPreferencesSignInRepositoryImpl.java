@@ -8,7 +8,7 @@ import com.bharathksunil.androidauthmvp.exception.AuthAlreadySignedInError;
 import com.bharathksunil.androidauthmvp.exception.AuthEmailError;
 import com.bharathksunil.androidauthmvp.exception.AuthPasswordError;
 import com.bharathksunil.androidauthmvp.presenter.SignInPresenter;
-import com.bharathksunil.utils.TextUtils;
+import com.bharathksunil.utils.ValidationUtil;
 
 import io.reactivex.Single;
 
@@ -63,7 +63,7 @@ public class SharedPreferencesSignInRepositoryImpl implements SignInPresenter.Re
 
     @Override
     public Single<String> resetPasswordLinkedToEmail(@NonNull String email) {
-        if (TextUtils.isEmailValid(email))
+        if (ValidationUtil.isEmailValid(email))
             if (manager.isUserRegistered(email)) {
                 //TODO: Connect to an email sending api and send the password to their email
                 return Single.error(new Throwable("UnImplemented Feature, Contact Admin"));
@@ -100,7 +100,7 @@ public class SharedPreferencesSignInRepositoryImpl implements SignInPresenter.Re
         }
 
         boolean validatePassword(String email, String password) {
-            return TextUtils.areEqual(preferences.getString(email, ""), password);
+            return ValidationUtil.areEqual(preferences.getString(email, ""), password);
         }
 
         String getPassword(@NonNull String email) {

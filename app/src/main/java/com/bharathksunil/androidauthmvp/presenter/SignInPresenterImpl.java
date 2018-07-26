@@ -2,11 +2,12 @@ package com.bharathksunil.androidauthmvp.presenter;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.bharathksunil.androidauthmvp.exception.AuthAlreadySignedInError;
 import com.bharathksunil.androidauthmvp.exception.AuthEmailError;
 import com.bharathksunil.androidauthmvp.exception.AuthPasswordError;
-import com.bharathksunil.utils.TextUtils;
+import com.bharathksunil.utils.ValidationUtil;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -88,7 +89,7 @@ public class SignInPresenterImpl implements SignInPresenter {
             mViewInstance.onEmailError(AuthEmailError.ERROR_EMPTY_MESSAGE);
             mViewInstance.onProcessEnded();
             return false;
-        } else if (!TextUtils.isEmailValid(email)) {
+        } else if (!ValidationUtil.isEmailValid(email)) {
             mViewInstance.onEmailError(AuthEmailError.ERROR_INVALID_MESSAGE);
             mViewInstance.onProcessEnded();
             return false;
@@ -96,7 +97,7 @@ public class SignInPresenterImpl implements SignInPresenter {
             mViewInstance.onPasswordError(AuthPasswordError.ERROR_EMPTY_MESSAGE);
             mViewInstance.onProcessEnded();
             return false;
-        } else if (!TextUtils.isPasswordStrong(password)) {
+        } else if (!ValidationUtil.isPasswordStrong(password)) {
             mViewInstance.onPasswordError(AuthPasswordError.ERROR_INVALID_MESSAGE);
             mViewInstance.onProcessEnded();
             return false;
@@ -114,7 +115,7 @@ public class SignInPresenterImpl implements SignInPresenter {
             if (TextUtils.isEmpty(email)) {
                 mViewInstance.onEmailError(AuthEmailError.ERROR_EMPTY_MESSAGE);
                 mViewInstance.onProcessEnded();
-            } else if (!TextUtils.isEmailValid(email)) {
+            } else if (!ValidationUtil.isEmailValid(email)) {
                 mViewInstance.onEmailError(AuthEmailError.ERROR_INVALID_MESSAGE);
                 mViewInstance.onProcessEnded();
             } else

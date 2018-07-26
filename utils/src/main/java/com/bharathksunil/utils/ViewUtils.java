@@ -23,13 +23,14 @@ import java.util.List;
  * @author Bharath Kumar S on 08-01-2018.
  */
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused", "WeakerAccess", "squid:S2209", "squid:S2440"})
 public class ViewUtils {
+
+    private static final Debug sDebug = new Debug(ViewUtils.class.getSimpleName());
 
     private ViewUtils() {
         //so that no instance is made
     }
-
 
     /**
      * Call this method to focus on any view inside the scrollView
@@ -46,7 +47,7 @@ public class ViewUtils {
                 scrollView.smoothScrollTo(((vLeft + vRight - sWidth) / 2), view.getTop());
             } catch (Exception e) {
                 //defensive programming, suppress the error
-                Debug.e(" Utils.focusOnView : " + e.getMessage());
+                ViewUtils.sDebug.e(" Utils.focusOnView : " + e.getMessage());
             }
         });
     }
@@ -78,7 +79,7 @@ public class ViewUtils {
             window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         } catch (Exception e) {
             //defensive programming, suppress the error
-            Debug.e("Utils.makePopupDisplay(): " + e.getMessage());
+            sDebug.e("Utils.makePopupDisplay(): " + e.getMessage());
         }
     }
 
@@ -89,7 +90,7 @@ public class ViewUtils {
      *
      * @param views the multiple views to set visible
      */
-    public static void setVisible(View... views) {
+    public static void setVisible(@NonNull final View... views) {
         for (View v : views) v.setVisibility(View.VISIBLE);
     }
 
@@ -99,7 +100,7 @@ public class ViewUtils {
      *
      * @param views the multiple views to set visible
      */
-    public static void setVisible(List<View> views) {
+    public static void setVisible(@NonNull final List<View> views) {
         for (View v : views) setVisible(v);
     }
 
@@ -108,7 +109,7 @@ public class ViewUtils {
      *
      * @param views the multiple views to set invisible
      */
-    public static void setInvisible(View... views) {
+    public static void setInvisible(@NonNull final View... views) {
         for (View v : views) v.setVisibility(View.INVISIBLE);
     }
 
@@ -118,7 +119,7 @@ public class ViewUtils {
      *
      * @param views the multiple views to set invisible
      */
-    public static void setInvisible(List<View> views) {
+    public static void setInvisible(@NonNull final List<View> views) {
         for (View v : views) setInvisible(v);
     }
 
@@ -127,7 +128,7 @@ public class ViewUtils {
      *
      * @param views the multiple views to set gone
      */
-    public static void setGone(View... views) {
+    public static void setGone(@NonNull final View... views) {
         for (View v : views) {
             v.setVisibility(View.GONE);
         }
@@ -139,7 +140,7 @@ public class ViewUtils {
      *
      * @param views the multiple views to set gone
      */
-    public static void setGone(List<View> views) {
+    public static void setGone(@NonNull final List<View> views) {
         for (View v : views) setGone(v);
     }
     //endregion
@@ -151,7 +152,7 @@ public class ViewUtils {
      *
      * @param views the multiple views to be enabled
      */
-    public static void setEnabled(View... views) {
+    public static void setEnabled(@NonNull final View... views) {
         for (View v : views) v.setEnabled(true);
     }
 
@@ -161,7 +162,7 @@ public class ViewUtils {
      *
      * @param views the multiple views to be enabled
      */
-    public static void setEnabled(List<View> views) {
+    public static void setEnabled(@NonNull final List<View> views) {
         for (View v : views) setEnabled(v);
     }
 
@@ -170,7 +171,7 @@ public class ViewUtils {
      *
      * @param views the multiple views to be disabled
      */
-    public static void setDisabled(View... views) {
+    public static void setDisabled(@NonNull final View... views) {
         for (View v : views) v.setEnabled(false);
     }
 
@@ -180,7 +181,7 @@ public class ViewUtils {
      *
      * @param views the multiple views to be disabled
      */
-    public static void setDisabled(List<View> views) {
+    public static void setDisabled(@NonNull final List<View> views) {
         for (View v : views) setDisabled(v);
     }
     //endregion
@@ -190,7 +191,7 @@ public class ViewUtils {
      *
      * @param textInputLayouts the textInputLayout
      */
-    public static void resetTextInputError(TextInputLayout... textInputLayouts) {
+    public static void resetTextInputError(@NonNull final TextInputLayout... textInputLayouts) {
         for (TextInputLayout textInputLayout : textInputLayouts)
             textInputLayout.setError(null);
     }
@@ -201,7 +202,7 @@ public class ViewUtils {
      *
      * @param textInputLayouts the multiple views to be disabled
      */
-    public static void resetTextInputError(List<TextInputLayout> textInputLayouts) {
+    public static void resetTextInputError(@NonNull final List<TextInputLayout> textInputLayouts) {
         for (TextInputLayout textInputLayout : textInputLayouts)
             resetTextInputError(textInputLayout);
     }
@@ -213,7 +214,7 @@ public class ViewUtils {
      * @param context      the context.
      * @param milliseconds the time the vibration must continue.
      */
-    public static void vibrate(@NonNull Context context, long milliseconds) {
+    public static void vibrate(@NonNull final Context context, long milliseconds) {
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -234,10 +235,10 @@ public class ViewUtils {
      * @param onClickListener the click listener for the okButton.
      * @return the AlertDialog that can be displayed using .show() or further customised.
      */
-    public static AlertDialog createSimpleAlertDialog(@NonNull Context context,
-                                                      @NonNull String title,
-                                                      @NonNull String message,
-                                                      @Nullable AlertDialog.OnClickListener onClickListener) {
+    public static AlertDialog createSimpleAlertDialog(@NonNull final Context context,
+                                                      @NonNull final String title,
+                                                      @NonNull final String message,
+                                                      @Nullable final AlertDialog.OnClickListener onClickListener) {
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert);
@@ -259,7 +260,7 @@ public class ViewUtils {
      *
      * @param view the view that must be animated
      */
-    public static void slideOutToRight(final View view) {
+    public static void slideOutToRight(@NonNull final View view) {
         TranslateAnimation animate = new TranslateAnimation(0, view.getWidth(), 0, 0);
         animate.setDuration(500);
         animate.setFillAfter(true);
@@ -287,7 +288,7 @@ public class ViewUtils {
      *
      * @param view the view that must be animated
      */
-    public static void slideOutToLeft(final View view) {
+    public static void slideOutToLeft(@NonNull final View view) {
         TranslateAnimation animate = new TranslateAnimation(0, -view.getWidth(), 0, 0);
         animate.setDuration(500);
         animate.setFillAfter(true);
@@ -315,7 +316,7 @@ public class ViewUtils {
      *
      * @param view the view that must be animated
      */
-    public static void slideOutToBottom(final View view) {
+    public static void slideOutToBottom(@NonNull final View view) {
         TranslateAnimation animate = new TranslateAnimation(0, 0, 0, view.getHeight());
         animate.setDuration(500);
         animate.setFillAfter(true);
@@ -343,7 +344,7 @@ public class ViewUtils {
      *
      * @param view the view that must be animated
      */
-    public static void slideOutToTop(final View view) {
+    public static void slideOutToTop(@NonNull final View view) {
         TranslateAnimation animate = new TranslateAnimation(0, 0, 0, -view.getHeight());
         animate.setDuration(500);
         animate.setFillAfter(true);

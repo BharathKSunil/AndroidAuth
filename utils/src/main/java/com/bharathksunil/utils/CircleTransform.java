@@ -7,6 +7,11 @@ import android.graphics.Paint;
 
 import com.squareup.picasso.Transformation;
 
+/**
+ * Use this {@link Transformation} with {@link com.squareup.picasso.Picasso} to transform the image
+ * to a circular image.<br/>
+ * <b>Usage:</b> {@code Picasso.get().load(imageUrl).transform(new CircleTransform()).into(imageView);}
+ */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class CircleTransform implements Transformation {
     @Override
