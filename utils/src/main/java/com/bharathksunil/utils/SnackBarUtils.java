@@ -206,6 +206,8 @@ public final class SnackBarUtils {
 
     //region Short SnackBar Methods
 
+    //todo: Add few more methods here for higher customization
+
     /**
      * TThis function makes apps accent colored SnackBar for displaying messages for short interval
      *

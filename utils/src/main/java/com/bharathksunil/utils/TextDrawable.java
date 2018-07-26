@@ -35,6 +35,7 @@ public final class TextDrawable extends ShapeDrawable {
     private final float mDrawableRadius;
     private final int mDrawableBorderThickness;
 
+    //todo: Add documentation and code cleanup
     private TextDrawable(Builder builder) {
         super(builder.shape);
 

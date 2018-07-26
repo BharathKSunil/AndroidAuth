@@ -48,6 +48,7 @@ public class Utils {
         return (nInfo != null && nInfo.isConnected());
     }
 
+    //todo: Move methods from here to appropriate classes
     public static boolean isPermissionGranted(@NonNull final Context context,
                                               @NonNull String permissionString) {
         return Build.VERSION.SDK_INT < 23 || context.checkSelfPermission(permissionString)
