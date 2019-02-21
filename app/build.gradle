@@ -9,11 +9,11 @@ android {
     /*testOptions {
         unitTests.returnDefaultValues = true
     }*/
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.bharathksunil.androidauthmvp"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
@@ -28,7 +28,7 @@ android {
 }
 
 dependencies {
-    def GoogleSupportVersion = '27.1.0'
+    def GoogleSupportVersion = '28.0.0'
     def FirebaseVersion = '16.0.1'
     def room_version = "1.1.1"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -50,10 +50,14 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
     //github libraries
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation ('com.squareup.picasso:picasso:2.71828') {
+        exclude group: 'com.android.support'
+    }
     implementation 'com.wang.avi:library:2.1.3'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.github.BharathKSunil:AndroidUtils:v1.0.1-beta'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
     //testingLibraries
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.7.22'

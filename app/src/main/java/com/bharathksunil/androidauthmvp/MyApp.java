@@ -2,12 +2,13 @@ package com.bharathksunil.androidauthmvp;
 
 import android.app.Application;
 
-import com.bharathksunil.utils.Debug;
+import timber.log.Timber;
 
 public class MyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Debug.setAsRelease(!BuildConfig.DEBUG);
+        if (BuildConfig.DEBUG)
+            Timber.plant(new Timber.DebugTree());
     }
 }

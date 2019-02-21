@@ -11,9 +11,10 @@ import com.bharathksunil.androidauthmvp.repository.FirebaseSignInRepositoryImpl;
 import com.bharathksunil.androidauthmvp.repository.LocalPinAuthRepositoryImpl;
 import com.bharathksunil.androidauthmvp.view.fragments.PinAuthFragment;
 import com.bharathksunil.androidauthmvp.view.fragments.SignInFragment;
-import com.bharathksunil.utils.Debug;
 import com.bharathksunil.utils.FragmentTransactionUtils;
 import com.bharathksunil.utils.SnackBarUtils;
+
+import timber.log.Timber;
 
 public class AuthActivity extends AppCompatActivity implements SignInFragment.OnFragmentInteractionListener,
         PinAuthFragment.OnFragmentInteractionListener {
@@ -45,23 +46,23 @@ public class AuthActivity extends AppCompatActivity implements SignInFragment.On
 
     @Override
     public void userSignedInSuccessfully() {
-        Debug.i("Signed In");
+        Timber.i("Signed In");
     }
 
     @Override
     public void userSignInCancelledOrFailed(@NonNull final String errorMessage) {
         SnackBarUtils.showErrorBar(this, errorMessage);
-        Debug.i("Sign in Failed or Cancelled");
+        Timber.i("Sign in Failed or Cancelled");
     }
 
     @Override
     public void userAlreadySignedIn() {
-        Debug.i("Signed in already");
+        Timber.i("Signed in already");
     }
 
     @Override
     public void loadSignUpScreen() {
-        Debug.i("Load SignUp");
+        Timber.i("Load SignUp");
     }
 
     @Override
